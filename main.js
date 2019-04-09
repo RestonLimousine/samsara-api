@@ -15,10 +15,10 @@ samsaraAPI.sendReq = function (uri, cb, params) {
 samsaraAPI.out = [];
 
 samsaraAPI.getDrivers = function () {
-  sendReq("/fleet/drivers", function (x) {
+  samsaraAPI.sendReq("/fleet/drivers", function (x) {
     x = JSON.parse(x).drivers;
     for (var i = 0; i < x.length; i++){
-      sendReq(
+      samsaraAPI.sendReq(
         "/fleet/hos_authentication_logs",
         function (y) {
           out.push(y);
