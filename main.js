@@ -16,7 +16,8 @@ var getDrivers = function (cb) {
   var out = [];
   sendReq("/fleet/drivers", function (x) {
     x = JSON.parse(x).drivers;
-    var t = (new Date).getTime();
+    var t = (new Date).getTime(),
+        done = 0;
     for (var i = 0; i < x.length; i++){
       (function (j) {
         out[j] = x[j];
@@ -25,13 +26,13 @@ var getDrivers = function (cb) {
           function (y) {
             var logs = JSON.parse(y).authenticationLogs || [];
             logs = logs.filter(function (x) {
-              console.log(out[j].name, x.actionType, x.actionType === "signin");
                 return (x.actionType === "signin");
               }).map(function (x) {
                 return x.happenedAtMs;
               }).sort();
             out[j].lastSignIn = logs.slice(-1)[0];
-            if (j === x.length - 1) {
+            done++;
+            if (done === x.length) {
               cb(out);
             }
           },
