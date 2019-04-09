@@ -43,7 +43,7 @@ var getDrivers = function (cb) {
   });
 }
 
-var makeDate = function (date, delim) {
+var dateStr = function (date, delim) {
   var n = delim ? 10 : 8;
   return date.toISOString().replace(/-/g, delim || "").slice(0,n);
 }
@@ -56,7 +56,7 @@ var downloadReport = function (file, headers, rows) {
   var content = headers + "\n" + rows,
       a = document.createElement("a");
   file = "samsara_" + file + "_";
-  file = file + makeDate(new Date);
+  file = file + dateStr(new Date());
   file = file + ".csv";
   a.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
   a.setAttribute('download', file);
@@ -64,11 +64,20 @@ var downloadReport = function (file, headers, rows) {
   a.click();
 }
 
+Array.prototype.sortBy = function (f) {
+  return this.sort(function (x, y) {
+    x = f(x), y = f(y);
+    return x > y ? 1 : x < y ? -1 : 0;
+  });
+}
+
 var getDriverReport = function () {
   getDrivers(function (rows) {
-    downloadReport("drivers", ["Name", "Last Sign In"], rows.map(function (row) {
+    downloadReport("drivers", ["Name", "Last Sign In"], rows.sortBy(function (row) {
+      return -(row.lastSignIn || 0);
+    }).map(function (row) {
       var signin = row.lastSignIn;
-      signin = signin ? makeDate(new Date(signin), "-") : "";
+      signin = signin ? dateStr(new Date(signin), "-") : "";
       return [row.name, signin];
     }));
   });
