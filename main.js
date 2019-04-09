@@ -67,7 +67,7 @@ var getDriverReport = function () {
   getDrivers(function (rows) {
     downloadReport("drivers", ["Name", "Last Sign In"], rows.map(function (row) {
       var signin = row.lastSignIn;
-      signin = signin ? makeDate(new Date(signin)) : "";
+      signin = signin ? makeDate(new Date(signin), "-") : "";
       return [row.name, signin];
     }));
   });
