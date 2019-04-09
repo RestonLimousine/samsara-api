@@ -27,17 +27,10 @@ var getDrivers = function () {
             var logs = JSON.parse(y).authenticationLogs || [];
             logs = logs.filter(function (x) {
                 return x.actionType === "signin";
-              }).sort(function (x, y) {
-                if (x.happenedAtMs < y.happenedAtMs) {
-                  return 1;
-                } else if (x.happenedAtMs > y.happenedAtMs) {
-                  return -1;
-                } else {
-                  return 0;
-                }
-              });
-                               if(logs[0])console.log(j);
-            out[j].lastSignIn = logs[0];
+              }).map(function (x) {
+                return x.happenedAtMs;
+              }).sort();
+            out[j].lastSignIn = logs.slice(-1)[0];
           },
           [["driverId", x[j].id],
            ["startMs", t-(24*60*60*1000*7)],
