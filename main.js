@@ -24,12 +24,12 @@ var getDrivers = function (cb) {
           "/fleet/hos_authentication_logs",
           function (y) {
             var logs = JSON.parse(y).authenticationLogs || [];
-            console.log(out[j].name, logs);
             logs = logs.filter(function (x) {
                 return x.actionType === "signin";
               }).map(function (x) {
                 return x.happenedAtMs;
               }).sort();
+            console.log(out[j].name, logs);
             out[j].lastSignIn = logs.slice(-1)[0];
             if (j === x.length - 1) {
               cb(out);
@@ -85,7 +85,7 @@ var getDriverReport = function () {
 }
 
 /*
-var getVehicles = function () { }
+var getVehicles = function () { };
 
 var getVehicleReport = function () {
   getVehicles(function (rows) {
@@ -93,11 +93,11 @@ var getVehicleReport = function () {
       rows.map(function (row) {
         return [
           row.name,
-          (row.odometerMeters===null ? "" : Math.floor(row.odometerMeters*0.000621371)),
+          (row.odometerMeters === null ? "" : Math.floor(row.odometerMeters * 0.000621371)),
           (row.engineHours || "")
         ];
-      });
+      })
     );
   });
-}
+};
 */
