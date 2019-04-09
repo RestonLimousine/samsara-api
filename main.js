@@ -66,6 +66,7 @@ var downloadReport = function (file, headers, rows) {
 var getDriverReport = function () {
   getDrivers(function (rows) {
     downloadReport("drivers", ["Name", "Last Sign In"], rows.map(function (row) {
+      console.log(row);
       return [row.name, makeDate(new Date(row.lastSignIn))];
     }));
   });
