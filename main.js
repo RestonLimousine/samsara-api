@@ -24,10 +24,8 @@ var getDrivers = function () {
         sendReq(
           "/fleet/hos_authentication_logs",
           function (y) {
+            console.log(j);
             out[j].authenticationLogs = JSON.parse(y).authenticationLogs;
-            if (j === x.length) {
-              console.log(j);
-            }
           },
           [["driverId", x[j].id],
            ["startMs", t-(24*60*60*1000)],
