@@ -19,16 +19,17 @@ var getDrivers = function () {
     x = JSON.parse(x).drivers;
     var t = (new Date).getTime();
     for (var i = 0; i < x.length; i++){
-      out[i] = x[i];
+      var j = i;
+      out[j] = x[j];
       sendReq(
         "/fleet/hos_authentication_logs",
         function (y) {
-          out[i].authenticationLogs = JSON.parse(y).authenticationLogs;
-          if (i === x.length) {
-            console.log(i);
+          out[j].authenticationLogs = JSON.parse(y).authenticationLogs;
+          if (j === x.length) {
+            console.log(j);
           }
         },
-        [["driverId", x[i].id],
+        [["driverId", x[j].id],
          ["startMs", t-(24*60*60*1000)],
          ["endMs", t]]
       );
