@@ -25,7 +25,7 @@ var getDrivers = function () {
           "/fleet/hos_authentication_logs",
           function (y) {
             var logs = JSON.parse(y).authenticationLogs;
-            logs.sort(function (x, y) {
+            logs ? logs.sort(function (x, y) {
               if (x.actionType === "signout") {
                 return -1;
               } else if (x.happenedAtMs < y.happenedAtMs) {
@@ -35,7 +35,7 @@ var getDrivers = function () {
               } else {
                 return 0;
               }
-            });
+            }) : logs = [];
             out[j].lastSignIn = logs[0];
           },
           [["driverId", x[j].id],
