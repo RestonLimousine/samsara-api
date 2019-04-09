@@ -21,9 +21,9 @@ samsaraAPI.getDrivers = function () {
       samsaraAPI.sendReq(
         "/fleet/hos_authentication_logs",
         function (y) {
-          out.push(y);
-          if (out.length === x.length) {
-            console.log(out.length);
+          samsaraAPI.out.push(y);
+          if (samsaraAPI.out.length === x.length) {
+            console.log(samsaraAPI.out.length);
           }
         },
         [["driverId", x[i].id],
