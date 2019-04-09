@@ -102,3 +102,7 @@ var getVehicleReport = function () {
   });
 };
 */
+
+console.log(
+  "To download a list of all drivers, type getDriverReport() and press Enter"
+);
