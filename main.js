@@ -27,7 +27,7 @@ var getDrivers = function () {
             var logs = JSON.parse(y).authenticationLogs || [];
             logs = logs.filter(function (x) {
                 return x.actionType === "signin";
-              }.sort(function (x, y) {
+              }).sort(function (x, y) {
                 if (x.happenedAtMs < y.happenedAtMs) {
                   return 1;
                 } else if (x.happenedAtMs > y.happenedAtMs) {
