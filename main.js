@@ -44,7 +44,8 @@ var getDrivers = function (cb) {
 }
 
 var makeDate = function (date, delim) {
-  return date.toISOString().replace(/-/g, delim || "").slice(0,8)
+  var n = delim ? 10 : 8;
+  return date.toISOString().replace(/-/g, delim || "").slice(0,n);
 }
 
 var downloadReport = function (file, headers, rows) {
