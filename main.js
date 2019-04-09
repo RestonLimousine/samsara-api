@@ -25,11 +25,11 @@ var getDrivers = function (cb) {
           function (y) {
             var logs = JSON.parse(y).authenticationLogs || [];
             logs = logs.filter(function (x) {
+              console.log(out[j].name, x);
                 return x.actionType === "signin";
               }).map(function (x) {
                 return x.happenedAtMs;
               }).sort();
-            console.log(out[j].name, logs);
             out[j].lastSignIn = logs.slice(-1)[0];
             if (j === x.length - 1) {
               cb(out);
