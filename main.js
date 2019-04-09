@@ -12,9 +12,8 @@ var sendReq = function (uri, cb, params) {
   req.send();
 };
 
-var out = [];
-
-var getDrivers = function () {
+var getDrivers = function (cb) {
+  var out = [];
   sendReq("/fleet/drivers", function (x) {
     x = JSON.parse(x).drivers;
     var t = (new Date).getTime();
@@ -31,6 +30,9 @@ var getDrivers = function () {
                 return x.happenedAtMs;
               }).sort();
             out[j].lastSignIn = logs.slice(-1)[0];
+            if (j === x.length - 1) {
+              cb(out);
+            }
           },
           [["driverId", x[j].id],
            ["startMs", t-(24*60*60*1000*7)],
@@ -41,4 +43,30 @@ var getDrivers = function () {
   });
 }
 
+var makeDate = function (date, delim) {
+  return date.toISOString().replace(/-/g, delim || "").slice(0,8)
+}
 
+var downloadReport = function (file, headers, rows) {
+  rows = rows.map(function (row) {
+    return row.map(function (x) { return '"' + x.replace(/"/g, '""') + '"' }).join(",");
+  }).join("\n");
+  headers = headers.join(",");
+  var content = headers + "\n" + rows,
+      a = document.createElement("a");
+  file = "samsara_" + file + "_";
+  file = file + makeDate(new Date);
+  file = file + ".csv";
+  a.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
+  a.setAttribute('download', file);
+  document.body.appendChild(a);
+  a.click();
+}
+
+var getDriverReport = function () {
+  downloadReport("drivers", ["Name", "Last Sign In"], function (rows) {
+    return rows.map(function (row) {
+      return [row.name, makeDate(new Date(row.lastSignIn))];
+    });
+  });
+}
