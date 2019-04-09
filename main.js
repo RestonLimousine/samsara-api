@@ -24,18 +24,19 @@ var getDrivers = function () {
         sendReq(
           "/fleet/hos_authentication_logs",
           function (y) {
-            var logs = JSON.parse(y).authenticationLogs;
-            logs ? logs.sort(function (x, y) {
-              if (x.actionType === "signout") {
-                return -1;
-              } else if (x.happenedAtMs < y.happenedAtMs) {
-                return 1;
-              } else if (x.happenedAtMs > y.happenedAtMs) {
-                return -1;
-              } else {
-                return 0;
-              }
-            }) : logs = [];
+            var logs = JSON.parse(y).authenticationLogs || [];
+            logs = logs.filter(function (x) {
+                return x.actionType === "signin";
+              }.sort(function (x, y) {
+                if (x.happenedAtMs < y.happenedAtMs) {
+                  return 1;
+                } else if (x.happenedAtMs > y.happenedAtMs) {
+                  return -1;
+                } else {
+                  return 0;
+                }
+              });
+                               if(logs[0])console.log(j);
             out[j].lastSignIn = logs[0];
           },
           [["driverId", x[j].id],
