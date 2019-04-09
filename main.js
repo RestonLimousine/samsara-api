@@ -84,6 +84,7 @@ var getDriverReport = function () {
   });
 }
 
+/*
 var getVehicles = function () { }
 
 var getVehicleReport = function () {
@@ -99,3 +100,4 @@ var getVehicleReport = function () {
     );
   });
 }
+*/
