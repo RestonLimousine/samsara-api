@@ -24,8 +24,8 @@ var getDrivers = function () {
         "/fleet/hos_authentication_logs",
         function (y) {
           out[i].authenticationLogs = JSON.parse(y).authenticationLogs;
-          if (out.length === x.length) {
-            console.log(out.length);
+          if (i === x.length) {
+            console.log(i);
           }
         },
         [["driverId", x[i].id],
