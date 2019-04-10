@@ -13,6 +13,13 @@ Array.prototype.sortByKey = function (k) {
   });
 }
 
+function dateStr (d) {
+  return d.toLocaleDateString({
+    hour: "numeric",
+    minute: "numeric"
+  });
+}
+
 var sendReq = function (uri, cb, params) {
   var req = new XMLHttpRequest();
   req.addEventListener("load", function () {
@@ -47,7 +54,7 @@ var getDrivers = function (cb) {
             */
             var signIns = logs.sortByKey("happenedAtMs").map(function (x) {
               var d = new Date(x.happenedAtMs);
-              return x.actionType + ": " + d.toLocaleDateString();
+              return x.actionType + ": " + dateStr(d);
             }).join("; ");
             // out[j].lastSignIn = logs.slice(-1)[0];
             out[j].signIns = signIns;
@@ -63,11 +70,6 @@ var getDrivers = function (cb) {
       })(i);
     }
   });
-}
-
-var dateStr = function (date, delim) {
-  var n = delim ? 10 : 8;
-  return date.toLocaleDateString().replace(/-/g, delim || "").slice(0,n);
 }
 
 var downloadReport = function (file, headers, rows) {
