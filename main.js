@@ -111,7 +111,7 @@ function createDriver (config) {
     ["username", config.id],
     ["password", config.id],
     ["eldPcEnabled", true],
-    ["eldYmEnabled", true].
+    ["eldYmEnabled", true],
     ["tagIds", []]
   ]);
 }
