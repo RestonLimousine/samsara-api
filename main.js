@@ -10,7 +10,7 @@ Array.prototype.sortBy = function (f) {
 Array.prototype.sortByKey = function (k) {
   return this.sortBy(function (x) {
     return x[k];
-  };
+  });
 }
 
 var sendReq = function (uri, cb, params) {
