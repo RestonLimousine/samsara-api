@@ -90,11 +90,11 @@ var downloadReport = function (file, headers, rows) {
 
 var getDriverReport = function () {
   getDrivers(function (rows) {
-    downloadReport("drivers", ["Name", "Sign Ins"], rows.sortBy(function (row) {
-      return (row.signIns || "Z");
+    downloadReport("drivers", ["Name", "ID", "Sign Ins"], rows.sortBy(function (row) {
+      return (row.signIns || "z");
     }).map(function (row) {
       var signIns = row.signIns;
-      return [row.name, signIns];
+      return [row.name, row.id, signIns];
     }));
   });
 }
