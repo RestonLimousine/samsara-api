@@ -46,7 +46,6 @@ var getDrivers = function (cb) {
               }).sort();
             */
             var signIns = logs.sortByKey("happenedAtMs").map(function (x) {
-              console.log(x);
               var d = new Date(x.happenedAtMs);
               return x.actionType + ": " + d.toISOString();
             }).join("; ");
@@ -92,9 +91,8 @@ var getDriverReport = function () {
     downloadReport("drivers", ["Name", "Sign Ins"], rows.sortBy(function (row) {
       return (row.signIns || "Z");
     }).map(function (row) {
-      var signin = row.signIns;
-      signin = signin ? dateStr(new Date(signin), "-") : "";
-      return [row.name, signin];
+      var signIns = row.signIns;
+      return [row.name, signIns];
     }));
   });
 }
