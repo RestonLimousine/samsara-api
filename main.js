@@ -128,6 +128,7 @@ for (var opNm in ops) {
       opFn = op[0],
       opDiv = document.createElement("div"),
       opA = document.createElement("a");
+  opA.href = "#";
   opA.textContent = opNm;
   opDiv.appendChild(opA);
   div.appendChild(opDiv);
