@@ -46,6 +46,7 @@ var getDrivers = function (cb) {
               }).sort();
             */
             var signIns = logs.sortByKey("happenedAtMs").map(function (x) {
+              console.log(x);
               var d = new Date(x.happenedAtMs);
               return x.actionType + ": " + d.toISOString();
             }).join("; ");
