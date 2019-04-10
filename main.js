@@ -74,7 +74,8 @@ var getDrivers = function (cb) {
 
 var downloadReport = function (file, headers, rows) {
   rows = rows.map(function (row) {
-    return row.map(function (x) { return '"' + x.replace(/"/g, '""') + '"' }).join(",");
+    var x = (typeof x === "string") ? x.replace(/"/g, '""') : x;
+    return row.map(function (x) { return '"' + x + '"' }).join(",");
   }).join("\n");
   headers = headers.join(",");
   var content = headers + "\n" + rows,
@@ -93,8 +94,7 @@ var getDriverReport = function () {
     downloadReport("drivers", ["Name", "ID", "Sign Ins"], rows.sortBy(function (row) {
       return (row.signIns || "z");
     }).map(function (row) {
-      var signIns = row.signIns;
-      return [row.name, row.id, signIns];
+      return [row.name, row.id, row.signIns];
     }));
   });
 }
