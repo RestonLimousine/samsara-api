@@ -28,6 +28,7 @@ var sendReq = function (uri, mtd, cb, params) {
   });
   uri = "https://api.samsara.com/v1" + uri + "?access_token=" + accessToken;
   uri = uri + (params ? "&" + params.map(function (x) { return x.join("="); }).join("&") : "");
+  uri = encodeURI(uri);
   console.log(uri);
   req.open(mtd, uri);
   req.send();
