@@ -74,8 +74,8 @@ var getDrivers = function (cb) {
 
 var downloadReport = function (file, headers, rows) {
   rows = rows.map(function (row) {
-    var x = (typeof x === "string") ? x.replace(/"/g, '""') : x;
-    return row.map(function (x) { return '"' + x + '"' }).join(",");
+    var x = (typeof x === "string") ? x.replace(/"/g, '') : x;
+    return row.map(function (x) { return '"' + x + '"'; }).join(",");
   }).join("\n");
   headers = headers.join(",");
   var content = headers + "\n" + rows,
