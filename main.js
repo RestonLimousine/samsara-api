@@ -14,7 +14,7 @@ Array.prototype.sortByKey = function (k) {
 }
 
 function dateStr (d) {
-  return d.toLocaleDateString({
+  return d.toLocaleString({
     hour: "numeric",
     minute: "numeric"
   });
