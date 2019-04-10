@@ -1,5 +1,18 @@
 var accessToken;
 
+Array.prototype.sortBy = function (f) {
+  return this.sort(function (x, y) {
+    x = f(x), y = f(y);
+    return x > y ? 1 : x < y ? -1 : 0;
+  });
+}
+
+Array.prototype.sortByKey = function (k) {
+  return this.sortBy(function (x) {
+    return x[k];
+  };
+}
+
 var sendReq = function (uri, cb, params) {
   var req = new XMLHttpRequest();
   req.addEventListener("load", function () {
@@ -25,12 +38,19 @@ var getDrivers = function (cb) {
           "/fleet/hos_authentication_logs",
           function (y) {
             var logs = JSON.parse(y).authenticationLogs || [];
+            /*
             logs = logs.filter(function (x) {
                 return (x.actionType === "signin");
               }).map(function (x) {
                 return x.happenedAtMs;
               }).sort();
-            out[j].lastSignIn = logs.slice(-1)[0];
+            */
+            var signIns = logs.sortByKey("happenedAtMs").map(function (x) {
+              var d = new Date(x.happenedAtMs);
+              return x.actionType + ": " + d.toISOString();
+            }).join("; ");
+            // out[j].lastSignIn = logs.slice(-1)[0];
+            out[j].signIns = signIns;
             done++;
             if (done === x.length) {
               cb(out);
@@ -66,19 +86,12 @@ var downloadReport = function (file, headers, rows) {
   a.click();
 }
 
-Array.prototype.sortBy = function (f) {
-  return this.sort(function (x, y) {
-    x = f(x), y = f(y);
-    return x > y ? 1 : x < y ? -1 : 0;
-  });
-}
-
 var getDriverReport = function () {
   getDrivers(function (rows) {
-    downloadReport("drivers", ["Name", "Last Sign In"], rows.sortBy(function (row) {
-      return -(row.lastSignIn || 0);
+    downloadReport("drivers", ["Name", "Sign Ins"], rows.sortBy(function (row) {
+      return (row.signIns || "Z");
     }).map(function (row) {
-      var signin = row.lastSignIn;
+      var signin = row.signIns;
       signin = signin ? dateStr(new Date(signin), "-") : "";
       return [row.name, signin];
     }));
