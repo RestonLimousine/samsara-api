@@ -117,6 +117,24 @@ function createDriver (config) {
   ]);
 }
 
+var div = document.createElement("div"),
+    ops = {
+      "Create Driver": [createDriver],
+      "Get Driver Report": [getDriverReport]
+    };
+
+for (var opNm in ops) {
+  var op = ops[opNm],
+      opFn = op[0],
+      opDiv = document.createElement("div"),
+      opA = document.createElement("a");
+  opA.textContent = opNm;
+  opDiv.appendChild(opA);
+  div.appendChild(opDiv);
+}
+
+document.body.appendChild(div);
+
 /*
 var getVehicles = function () { };
 
