@@ -20,22 +20,22 @@ function dateStr (d) {
   });
 }
 
-var sendReq = function (uri, cb, params) {
+var sendReq = function (uri, mtd, cb, params) {
   var req = new XMLHttpRequest();
   req.addEventListener("load", function () {
     var rsp = this.responseText;
-    cb(JSON.parse(rsp));
+    cb(JSON.parse(rsp), rsp);
   });
   uri = "https://api.samsara.com/v1" + uri + "?access_token=" + accessToken;
   uri = uri + (params ? "&" + params.map(function (x) { return x.join("="); }).join("&") : "");
   console.log(uri);
-  req.open("GET", uri);
+  req.open(mtd, uri);
   req.send();
 };
 
 var getDrivers = function (cb) {
   var out = [];
-  sendReq("/fleet/drivers", function (x) {
+  sendReq("/fleet/drivers", "GET", function (x) {
     x = x.drivers;
     var t = (new Date).getTime(),
         done = 0;
@@ -44,6 +44,7 @@ var getDrivers = function (cb) {
         out[j] = x[j];
         sendReq(
           "/fleet/hos_authentication_logs",
+          "GET",
           function (y) {
             var logs = y.authenticationLogs || [];
             /*
@@ -100,6 +101,19 @@ var getDriverReport = function () {
       return [row.name, row.id, row.signIns];
     }));
   });
+}
+
+function createDriver (config) {
+  sendReq("/fleet/drivers/create", "POST", function (x, s) {
+    console.log(s);
+  }, [
+    ["name", config.name],
+    ["username", config.id],
+    ["password", config.id],
+    ["eldPcEnabled", true],
+    ["eldYmEnabled", true].
+    ["tagIds", []]
+  ]);
 }
 
 /*
