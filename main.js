@@ -24,7 +24,7 @@ var sendReq = function (uri, cb, params) {
   var req = new XMLHttpRequest();
   req.addEventListener("load", function () {
     var rsp = this.responseText;
-    cb(rsp);
+    cb(JSON.parse(rsp));
   });
   uri = "https://api.samsara.com/v1" + uri + "?access_token=" + accessToken;
   uri = uri + (params ? "&" + params.map(function (x) { return x.join("="); }).join("&") : "");
@@ -35,7 +35,7 @@ var sendReq = function (uri, cb, params) {
 var getDrivers = function (cb) {
   var out = [];
   sendReq("/fleet/drivers", function (x) {
-    x = JSON.parse(x).drivers;
+    x = x.drivers;
     var t = (new Date).getTime(),
         done = 0;
     for (var i = 0; i < x.length; i++){
@@ -44,7 +44,7 @@ var getDrivers = function (cb) {
         sendReq(
           "/fleet/hos_authentication_logs",
           function (y) {
-            var logs = JSON.parse(y).authenticationLogs || [];
+            var logs = y.authenticationLogs || [];
             /*
             logs = logs.filter(function (x) {
                 return (x.actionType === "signin");
