@@ -22,8 +22,8 @@ function dateStr (d) {
 
 function mdy (d, delim) {
   var s = d.toLocaleDateString();
-  s = s.split(/\D/).slice(-1);
-  s = s.slice(0, 2).concat(s);
+  var s2 = s.split(/\D/).slice(-1);
+  s = s.slice(0, 2).concat(s2);
   return s.join(delim || "");
 }
 
