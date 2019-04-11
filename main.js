@@ -266,10 +266,8 @@ for (var i = 0; i < ops.length; i++) {
     preDLCSV.onclick = function () {
       var path = preDLCSVInput.value || "";
       path = path.split(/\./);
-      console.log(path);
       var res = lastResult;
       for (var i = 0; i < path.length; i++) {
-        console.log(res);
         res = res[path[i]];
       }
       if (res && (res.constructor === Array)) {
