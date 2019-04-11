@@ -20,62 +20,76 @@ function dateStr (d) {
   });
 }
 
-var sendReq = function (uri, mtd, cb, params) {
-  var req = new XMLHttpRequest();
+var sendReq = function (config) {
+  var uri = config.endpoint,
+      mtd = config.method,
+      cb = config.callback,
+      params = config.params,
+      req = new XMLHttpRequest();
   req.addEventListener("load", function () {
     var rsp = this.responseText;
     cb(JSON.parse(rsp), rsp);
   });
+  params = (params ? "&" + params.map(function (x) { return x.join("="); }).join("&") : "");
   uri = "https://api.samsara.com/v1" + uri + "?access_token=" + accessToken;
-  uri = uri + (params ? "&" + params.map(function (x) { return x.join("="); }).join("&") : "");
-  uri = encodeURI(uri);
+  uri = encodeURI(uri + params);
   console.log(uri);
   req.open(mtd, uri);
   req.send();
 };
 
-var getDrivers = function (cb) {
-  var out = [];
-  sendReq("/fleet/drivers", "GET", function (x) {
-    x = x.drivers;
-    var t = (new Date).getTime(),
-        done = 0;
-    for (var i = 0; i < x.length; i++){
-      (function (j) {
-        out[j] = x[j];
-        sendReq(
-          "/fleet/hos_authentication_logs",
-          "GET",
-          function (y) {
-            var logs = y.authenticationLogs || [];
-            /*
-            logs = logs.filter(function (x) {
-                return (x.actionType === "signin");
-              }).map(function (x) {
-                return x.happenedAtMs;
-              }).sort();
-            */
-            var signIns = logs.sortByKey("happenedAtMs").map(function (x) {
-              var d = new Date(x.happenedAtMs);
-              return x.actionType + ": " + dateStr(d);
-            }).join("; ");
-            // out[j].lastSignIn = logs.slice(-1)[0];
-            out[j].signIns = signIns;
-            done++;
-            if (done === x.length) {
-              cb(out);
-            }
-          },
-          [["driverId", x[j].id],
-           ["startMs", t-(24*60*60*1000*7)],
-           ["endMs", t]]
-        );
-      })(i);
+var getDrivers = function (config) {
+  var cb = config.callback,
+      out = [];
+  sendReq({
+    endpoint: "/fleet/drivers",
+    method: "GET",
+    callback: function (x) {
+      x = x.drivers;
+      var t = (new Date).getTime(),
+          done = 0;
+      for (var i = 0; i < x.length; i++){
+        (function (j) {
+          out[j] = x[j];
+          sendReq({
+            endpoint: "/fleet/hos_authentication_logs",
+            method: "GET",
+            callback: function (y) {
+              var logs = y.authenticationLogs || [];
+              /*
+              logs = logs.filter(function (x) {
+                  return (x.actionType === "signin");
+                }).map(function (x) {
+                  return x.happenedAtMs;
+                }).sort();
+              */
+              var signIns = logs.sortByKey("happenedAtMs").map(function (x) {
+                var d = new Date(x.happenedAtMs);
+                return x.actionType + ": " + dateStr(d);
+              }).join("; ");
+              // out[j].lastSignIn = logs.slice(-1)[0];
+              out[j].signIns = signIns;
+              done++;
+              if (done === x.length) {
+                cb(out);
+              }
+            },
+            params: [
+              ["driverId", x[j].id],
+              ["startMs", t-(24*60*60*1000*7)],
+              ["endMs", t]
+            ]
+          });
+        })(i);
+      }
     }
   });
 }
 
-var downloadReport = function (file, headers, rows) {
+var downloadReport = function (config) {
+  var file = config.file,
+      headers = config.headers,
+      rows = config.rows;
   rows = rows.map(function (row) {
     return row.map(function (x) {
       x = (typeof x === "string") ? x.replace(/"/g, '""') : x;
@@ -95,26 +109,33 @@ var downloadReport = function (file, headers, rows) {
 }
 
 var getDriverReport = function () {
-  getDrivers(function (rows) {
-    downloadReport("drivers", ["Name", "ID", "Sign Ins"], rows.sortBy(function (row) {
-      return (row.signIns || "z");
-    }).map(function (row) {
-      return [row.name, row.id, row.signIns];
-    }));
+  getDrivers({
+    callback: function (rows) {
+      downloadReport("drivers", ["Name", "ID", "Sign Ins"], rows.sortBy(function (row) {
+        return (row.signIns || "z");
+      }).map(function (row) {
+        return [row.name, row.id, row.signIns];
+      }));
+    }
   });
 }
 
 function createDriver (config) {
-  sendReq("/fleet/drivers/create", "POST", function (x, s) {
-    console.log(s);
-  }, [
-    ["name", config.name],
-    ["username", config.id],
-    ["password", config.id],
-    ["eldPcEnabled", true],
-    ["eldYmEnabled", true],
-    ["tagIds", [100835]]
-  ]);
+  sendReq({
+    endpoint: "/fleet/drivers/create",
+    method: "POST",
+    callback: function (x, s) {
+      console.log(s);
+    },
+    params: [
+      ["name", config.name],
+      ["username", config.id],
+      ["password", config.id],
+      ["eldPcEnabled", true],
+      ["eldYmEnabled", true],
+      ["tagIds", [100835]]
+    ]
+  });
 }
 
 var div = document.createElement("div"),
