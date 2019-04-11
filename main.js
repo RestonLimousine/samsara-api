@@ -75,6 +75,7 @@ var getDrivers = function (config) {
           sendReq({
             endpoint: "/fleet/hos_authentication_logs",
             method: "GET",
+            finalText: config.finalText,
             callback: function (y) {
               var logs = y.authenticationLogs || [];
               /*
