@@ -176,13 +176,15 @@ for (var i = 0; i < ops.length; i++) {
     
     for (var i = 2; i < op.length; i += 2) {
       (function (label, name) {
-        var l = document.createElement("label"),
+        var p = document.createElement("p"),
+            l = document.createElement("label"),
             input = document.createElement("input");
         l.innerText = label;
-        innerDiv.appendChild(l);
+        p.appendChild(l);
         input.type = "text";
         input.name = name;
-        innerDiv.appendChild(input);
+        p.appendChild(input);
+        innerDiv.appendChild(p);
       })(op[i], op[i + 1]);
     }
     
