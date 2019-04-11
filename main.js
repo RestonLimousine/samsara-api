@@ -140,7 +140,7 @@ function createDriver (config) {
 
 var div = document.createElement("div"),
     ops = {
-      "Create Driver": [createDriver],
+      "Create Driver": [createDriver, "Driver Name", "name", "Driver ID", "id"],
       "Get Driver Report": [getDriverReport]
     };
 
@@ -148,10 +148,20 @@ for (var opNm in ops) {
   var op = ops[opNm],
       opFn = op[0],
       opDiv = document.createElement("div"),
-      opA = document.createElement("a");
+      opA = document.createElement("a"),
+      innerDiv = document.createElement("div"),
+      innerA = document.createElement("a");
   opA.href = "#";
   opA.textContent = opNm;
+  opA.onclick = function () {
+    innerDiv.style.display = "";
+  }
+  innerA.href = "#";
+  innerA.textContent = "Execute";
+  innerDiv.style.display = "none";
+  innerDiv.appendChild(innerA);
   opDiv.appendChild(opA);
+  opDiv.appendChild(innerDiv);
   div.appendChild(opDiv);
 }
 
