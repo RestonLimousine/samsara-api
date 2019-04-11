@@ -205,10 +205,10 @@ for (var i = 0; i < ops.length; i++) {
         pre = document.createElement("pre"),
         preLabel = document.createElement("b"),
         preClear = freshA("clear"),
-        preClearDiv = document.createElement("div"),
+        preClearP = document.createElement("p"),
         preDLText = freshA("download plain text"),
-        preDLTextDiv = document.createElement("div"),
-        preDLCSVDiv = document.createElement("div"),
+        preDLTextP = document.createElement("p"),
+        preDLCSVP = document.createElement("p"),
         preDLCSVInput = document.createElement("input"),
         preDLCSV = freshA("download csv"),
         preLabelP = document.createElement("p"),
@@ -216,8 +216,12 @@ for (var i = 0; i < ops.length; i++) {
         config = {pre: pre},
         fileName = opNm.toLowerCase().replace(/ /, "_");
     
+    preClearP.style.marginLeft = "2em";
+    preDLTextP.style.marginLeft = "2em";
+    preDLCSVP.style.marginLeft = "2em";
+    
     preClear.onclick = function () { pre.innerText = ""; };
-    preClearDiv.appendChild(preClear);
+    preClearP.appendChild(preClear);
     preDLText.onclick = function () {
       downloadContent({
         filename: fileName,
@@ -225,7 +229,7 @@ for (var i = 0; i < ops.length; i++) {
         ext: "txt"
       });
     };
-    preDLTextDiv.appendChild(preDLText);
+    preDLTextP.appendChild(preDLText);
     preLabel.innerText = "Results: ";
     preLabelP.appendChild(preLabel);
     preLabelP.appendChild(preClearDiv);
@@ -234,10 +238,10 @@ for (var i = 0; i < ops.length; i++) {
     preDiv.appendChild(preDLCSVDiv);
     preDiv.appendChild(pre);
     
-    preDLCSVDiv.appendChild(preDLCSV);
+    preDLCSVP.appendChild(preDLCSV);
     preDLCSVInput.type = "text";
     preDLCSVInput.placeholder = "path to array";
-    preDLCSVDiv.appendChild(preDLCSVInput);
+    preDLCSVP.appendChild(preDLCSVInput);
     
     for (var i = 2; i < op.length; i += 2) {
       (function (label, name) {
