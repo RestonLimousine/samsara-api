@@ -20,6 +20,13 @@ function dateStr (d) {
   });
 }
 
+function mdy (d, delim) {
+  var s = d.toLocaleDateString();
+  s = s.split(/\D/).slice(-1);
+  s = s.slice(0, 2).concat(s);
+  return s.join(delim || "");
+}
+
 var sendReq = function (config) {
   var uri = config.endpoint,
       mtd = config.method,
@@ -100,7 +107,7 @@ var downloadReport = function (config) {
   var content = headers + "\n" + rows,
       a = document.createElement("a");
   file = "samsara_" + file + "_";
-  file = file + dateStr(new Date());
+  file = file + mdy(new Date());
   file = file + ".csv";
   a.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
   a.setAttribute('download', file);
