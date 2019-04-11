@@ -31,7 +31,7 @@ function mdy (d, delim) {
   return s.join(delim || "");
 }
 
-var sendReq = function (config, wrapUp) {
+var sendReq = function (config) {
   var uri = config.endpoint,
       mtd = config.method,
       cb = config.callback,
@@ -41,7 +41,6 @@ var sendReq = function (config, wrapUp) {
     var rsp = this.responseText,
         res = JSON.parse(rsp);
     if (cb) cb(res, rsp);
-    wrapUp(res);
   });
   params = (params ? "&" + params.map(function (x) { return x.join("="); }).join("&") : "");
   uri = "https://api.samsara.com/v1" + uri + "?access_token=" + accessToken;
@@ -51,14 +50,14 @@ var sendReq = function (config, wrapUp) {
   req.send();
 };
 
-function sendRequest (config, wrapUp) {
+function sendRequest (config) {
   config.params = (config.params || "").split(/&/).map(function (x) {
     return x.split(/=/);
   });
-  sendReq(config, wrapUp);
+  sendReq(config);
 }
 
-var getDrivers = function (config, wrapUp) {
+var getDrivers = function (config) {
   var cb = config.callback,
       out = [];
   sendReq({
@@ -99,13 +98,11 @@ var getDrivers = function (config, wrapUp) {
               ["startMs", t-(24*60*60*1000*7)],
               ["endMs", t]
             ]
-          },
-          wrapUp);
+          });
         })(i);
       }
     }
-  },
-  wrapUp);
+  });
 }
 
 function downloadContent (config) {
@@ -162,7 +159,7 @@ function createAndDownloadCSV (config) {
   downloadCSV(config);
 }
 
-var getDriverReport = function (config, wrapUp) {
+var getDriverReport = function (config) {
   config.callback = function (rows) {
     downloadCSV({
       filename: "drivers",
@@ -174,10 +171,10 @@ var getDriverReport = function (config, wrapUp) {
       })
     });
   };
-  getDrivers(config, wrapUp);
+  getDrivers(config);
 }
 
-function createDriver (config, wrapUp) {
+function createDriver (config) {
   sendReq({
     endpoint: "/fleet/drivers/create",
     method: "POST",
@@ -189,7 +186,7 @@ function createDriver (config, wrapUp) {
       ["eldYmEnabled", true],
       ["tagIds", [100835]]
     ]
-  }, wrapUp);
+  });
 }
 
 var div = document.createElement("div"),
@@ -318,10 +315,13 @@ for (var i = 0; i < ops.length; i++) {
         config[inputName] = inputs[inputName].value;
       }
       pre.innerText = "please wait...";
-      var wrapUp = function (res) {
-        lastResult = res;
-        pre.innerText = op.finalText || JSON.stringify(res, null, 2);
-      }
+      var cb = config.callback,
+          wrapUp = function (res, rsp) {
+            if (cb) cb(res, rsp);
+            lastResult = res;
+            pre.innerText = op.finalText || JSON.stringify(res, null, 2);
+          };
+      config.callback = wrapUp;
       opFn(config, wrapUp);
     }
     executeP.appendChild(executeA);
