@@ -232,9 +232,9 @@ for (var i = 0; i < ops.length; i++) {
     preDLTextP.appendChild(preDLText);
     preLabel.innerText = "Results: ";
     preLabelP.appendChild(preLabel);
+    preDiv.appendChild(preLabelP);
     preDiv.appendChild(preClearP);
     preDiv.appendChild(preDLTextP);
-    preDiv.appendChild(preLabelP);
     preDiv.appendChild(preDLCSVP);
     preDiv.appendChild(pre);
     
