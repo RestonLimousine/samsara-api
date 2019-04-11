@@ -64,6 +64,7 @@ var getDrivers = function (config) {
   sendReq({
     endpoint: "/fleet/drivers",
     method: "GET",
+    finalText: config.finalText,
     callback: function (x) {
       x = x.drivers;
       var t = (new Date).getTime(),
