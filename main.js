@@ -145,24 +145,26 @@ var div = document.createElement("div"),
     };
 
 for (var opNm in ops) {
-  var op = ops[opNm],
-      opFn = op[0],
-      opDiv = document.createElement("div"),
-      opA = document.createElement("a"),
-      innerDiv = document.createElement("div"),
-      innerA = document.createElement("a");
-  opA.href = "#";
-  opA.textContent = opNm;
-  opA.onclick = function () {
-    innerDiv.style.display = "";
-  }
-  innerA.href = "#";
-  innerA.textContent = "Execute";
-  innerDiv.style.display = "none";
-  innerDiv.appendChild(innerA);
-  opDiv.appendChild(opA);
-  opDiv.appendChild(innerDiv);
-  div.appendChild(opDiv);
+  (function (opNm) {
+    var op = ops[opNm],
+        opFn = op[0],
+        opDiv = document.createElement("div"),
+        opA = document.createElement("a"),
+        innerDiv = document.createElement("div"),
+        innerA = document.createElement("a");
+    opA.href = "#";
+    opA.textContent = opNm;
+    opA.onclick = function () {
+      innerDiv.style.display = "";
+    }
+    innerA.href = "#";
+    innerA.textContent = "Execute";
+    innerDiv.style.display = "none";
+    innerDiv.appendChild(innerA);
+    opDiv.appendChild(opA);
+    opDiv.appendChild(innerDiv);
+    div.appendChild(opDiv);
+  })(opNm);
 }
 
 document.body.appendChild(div);
