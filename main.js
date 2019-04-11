@@ -160,22 +160,6 @@ function createAndDownloadCSV (config) {
   downloadCSV(config);
 }
 
-var getDriverReport = function (inputs) {
-  return {
-    callback: function (rows) {
-      downloadCSV({
-        filename: "drivers",
-        headers: ["Name", "ID", "Sign Ins"],
-        rows: rows.sortBy(function (row) {
-          return (row.signIns || "z");
-        }).map(function (row) {
-          return [row.name, row.id, row.signIns];
-        })
-      });
-    }
-  };
-}
-
 function createDriver (inputs) {
   return {
     endpoint: "/fleet/drivers/create",
@@ -201,7 +185,6 @@ var div = document.createElement("div"),
       },
       {
         label: "Get Driver Report",
-        makeConfig: getDriverReport,
         finalText: "download initiated",
         op: getDrivers
       },
@@ -319,12 +302,13 @@ for (var i = 0; i < ops.length; i++) {
         config[inputName] = inputs[inputName].value;
       }
       pre.innerText = "please wait...";
+      op.makeConfig = op.makeConfig || function (x) { return {}; };
       var conf = op.makeConfig(config),
           cb = conf.callback,
           newCB = function (res, rsp) {
-            if (cb) cb(res, rsp);
+            if (cb) res = cb(res, rsp);
             lastResult = res;
-            pre.innerText = op.finalText || JSON.stringify(res, null, 2);
+            pre.innerText = JSON.stringify(res, null, 2);
           };
       for (var prop in conf) {
         config[prop] = conf[prop];
