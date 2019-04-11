@@ -187,8 +187,9 @@ for (var i = 0; i < ops.length; i++) {
         innerDiv = document.createElement("div"),
         executeP = document.createElement("p"),
         executeA = document.createElement("a"),
-        pre = document.createElement("pre"),
-        config = {};
+        pre = document.createElement("pre"),\
+        inputs = {},
+        config = {pre: pre};
     
     pre.style.whiteSpace = "pre-wrap";
     
@@ -202,7 +203,7 @@ for (var i = 0; i < ops.length; i++) {
         input.type = "text";
         p.appendChild(input);
         innerDiv.appendChild(p);
-        config[name] = input;
+        inputs[name] = input;
       })(op[i], op[i + 1]);
     }
     
@@ -218,12 +219,9 @@ for (var i = 0; i < ops.length; i++) {
     executeA.href = voidLink;
     executeA.textContent = "Execute";
     executeA.onclick = function () {
-      for (var inputName in config) {
-        (function (input) {
-          config[inputName] = input.value;
-        })(config[inputName]);
+      for (var inputName in inputs) {
+        config[inputName] = inputs[inputName].value;
       }
-      config.pre = pre;
       pre.innerText = "please wait...";
       opFn(config);
     }
