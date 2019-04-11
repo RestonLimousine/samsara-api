@@ -196,6 +196,7 @@ for (var opNm in ops) {
   })(opNm);
 }
 
+document.body.innerHTML = "";
 document.body.appendChild(div);
 
 /*
