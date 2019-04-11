@@ -1,4 +1,4 @@
-var accessToken;
+var accessToken, lastResult;
 
 Array.prototype.sortBy = function (f) {
   return this.sort(function (x, y) {
@@ -39,7 +39,8 @@ var sendReq = function (config) {
       req = new XMLHttpRequest();
   req.addEventListener("load", function () {
     var rsp = this.responseText;
-    cb(JSON.parse(rsp), rsp);
+    lastResult = JSON.parse(rsp);
+    cb(lastResult, rsp);
   });
   params = (params ? "&" + params.map(function (x) { return x.join("="); }).join("&") : "");
   uri = "https://api.samsara.com/v1" + uri + "?access_token=" + accessToken;
@@ -238,9 +239,21 @@ for (var i = 0; i < ops.length; i++) {
     preDiv.appendChild(preDLCSVP);
     preDiv.appendChild(pre);
     
+    preDLCSV.onclick = function () {
+      var path = preDLCSV.value || "";
+      path = path.split(/\./);
+      var res = lastResult;
+      for (var i = 0; i < path.length; i++) {
+        res = lastResult[i];
+      }
+      if (res && res.constructor === Array) {
+        console.log(res);
+      }
+    }
     preDLCSVP.appendChild(preDLCSV);
     preDLCSVInput.type = "text";
     preDLCSVInput.placeholder = "path to array";
+    preDLCSVInput.style.marginLeft = "1em";
     preDLCSVP.appendChild(preDLCSVInput);
     
     for (var i = 2; i < op.length; i += 2) {
