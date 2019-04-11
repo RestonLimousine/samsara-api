@@ -115,7 +115,7 @@ function downloadContent (config) {
       content = config.content;
   file = "samsara_" + file + "_";
   file = file + mdy(new Date());
-  file = file + ext;
+  file = file + "." + ext;
   a.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
   a.setAttribute('download', file);
   document.body.appendChild(a);
@@ -134,7 +134,7 @@ var downloadCSV = function (config) {
   }).join("\n");
   headers = headers.join(",");
   config.content = headers + "\n" + rows;
-  config.ext = ".csv";
+  config.ext = "csv";
   downloadContent(config);
 }
 
@@ -202,14 +202,22 @@ for (var i = 0; i < ops.length; i++) {
         preDLText = document.createElement("a"),
         preLabelP = document.createElement("p"),
         inputs = {},
-        config = {pre: pre};
+        config = {pre: pre},
+        fileName = opNm.toLowerCase().replace(/ /, "_");
     
     preClear.href = voidLink;
     preClear.innerText = "[clear] ";
     preClear.onclick = function () { pre.innerText = ""; };
     preDLText.href = voidLink;
     preDLText.innertText = "[download plain text] ";
-    preDLText.onclick = null;
+    
+    preDLText.onclick = function () {
+      downloadContent({
+        filename: fileName,
+        content: pre.innerText,
+        ext: "txt"
+      });
+    };
     preLabel.innerText = "Results: ";
     preLabelP.appendChild(preLabel);
     preLabelP.appendChild(preClear);
