@@ -21,7 +21,12 @@ function dateStr (d) {
 }
 
 function mdy (d, delim) {
-  var s = d.toLocaleDateString().split(/\D/)
+  var opts = {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric"
+      },
+      s = d.toLocaleDateString("en", opts).split(/\D/)
   s = s.slice(0, 2).concat(s.slice(-1));
   return s.join(delim || "");
 }
