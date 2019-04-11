@@ -189,12 +189,18 @@ for (var i = 0; i < ops.length; i++) {
         executeA = document.createElement("a"),
         preDiv = document.createElement("div"),
         pre = document.createElement("pre"),
-        preLabel = document.createElement("h4"),
+        preLabel = document.createElement("b"),
+        preClear = document.createElement("a"),
+        preLabelP = document.createElement("p"),
         inputs = {},
         config = {pre: pre};
     
-    preLabel.innerText = "Results:";
-    preDiv.appendChild(preLabel);
+    preClear.href = voidLink;
+    preClear.innerText = "(clear)";
+    preLabel.innerText = "Results: ";
+    preLabelP.appendChild(preLabel);
+    preLabelP.appendChild(preClear);
+    preDiv.appendChild(preLabelP);
     preDiv.appendChild(pre);
     
     for (var i = 2; i < op.length; i += 2) {
