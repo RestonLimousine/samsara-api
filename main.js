@@ -197,6 +197,7 @@ for (var i = 0; i < ops.length; i++) {
     
     preClear.href = voidLink;
     preClear.innerText = "(clear)";
+    preClear.onclick = function () { pre.innerText = ""; };
     preLabel.innerText = "Results: ";
     preLabelP.appendChild(preLabel);
     preLabelP.appendChild(preClear);
