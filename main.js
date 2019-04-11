@@ -1,4 +1,4 @@
-var accessToken, lastResult;
+var accessToken, lastResult, thisPre;
 
 Array.prototype.sortBy = function (f) {
   return this.sort(function (x, y) {
@@ -40,7 +40,7 @@ var sendReq = function (config) {
   req.addEventListener("load", function () {
     var rsp = this.responseText;
     lastResult = JSON.parse(rsp);
-    config.pre.innerText = JSON.stringify(lastResult, null, 2);
+    thisPre.innerText = JSON.stringify(lastResult, null, 2);
     if (cb) cb(lastResult, rsp);
   });
   params = (params ? "&" + params.map(function (x) { return x.join("="); }).join("&") : "");
@@ -177,7 +177,6 @@ var getDriverReport = function (config) {
 
 function createDriver (config) {
   sendReq({
-    pre: config.pre,
     endpoint: "/fleet/drivers/create",
     method: "POST",
     params: [
@@ -232,7 +231,7 @@ for (var i = 0; i < ops.length; i++) {
         preDLCSV = freshA("download csv"),
         preLabelP = document.createElement("p"),
         inputs = {},
-        config = {pre: pre},
+        config = {},
         fileName = opNm.toLowerCase().replace(/ /, "_");
     
     preClearP.style.marginLeft = "2em";
@@ -304,6 +303,7 @@ for (var i = 0; i < ops.length; i++) {
         config[inputName] = inputs[inputName].value;
       }
       pre.innerText = "please wait...";
+      thisPre = pre;
       opFn(config);
     }
     executeP.appendChild(executeA);
