@@ -240,7 +240,7 @@ for (var i = 0; i < ops.length; i++) {
     preDiv.appendChild(pre);
     
     preDLCSV.onclick = function () {
-      var path = preDLCSV.value || "";
+      var path = preDLCSVInput.value || "";
       path = path.split(/\./);
       console.log(path);
       var res = lastResult;
