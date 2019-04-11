@@ -50,7 +50,7 @@ var sendReq = function (config) {
 };
 
 function sendRequest (config) {
-  config.params = config.params.split(/&/).map(function (x) {
+  config.params = (config.params || "").split(/&/).map(function (x) {
     return x.split(/=/);
   });
   config.callback = function (data, text) {
@@ -211,6 +211,7 @@ for (var i = 0; i < ops.length; i++) {
     nameA.onclick = function () {
       if (showingDiv) showingDiv.style.display = "none";
       showingDiv = innerDiv;
+      pre.innerText = "please wait...";
       innerDiv.style.display = "";
     }
     nameP.appendChild(nameA);
