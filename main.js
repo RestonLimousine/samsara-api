@@ -229,7 +229,6 @@ for (var i = 0; i < ops.length; i++) {
     preDiv.appendChild(preDLCSVDiv);
     preDiv.appendChild(pre);
     
-    preDLCSVDiv.style.display = "none";
     preDLCSVLabel.innerText = "Download CSV: ";
     preDLCSVDiv.appendChild(preDLCSVLabel);
     preDLCSVInput.type = "text";
