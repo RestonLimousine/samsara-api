@@ -129,7 +129,11 @@ var downloadCSV = function (config) {
       rows = config.rows;
   rows = rows.map(function (row) {
     return row.map(function (x) {
-      x = (typeof x === "string") ? x.replace(/"/g, '""') : x;
+      switch (x.constructor) {
+        case String: x = x.replace(/"/g, '""'); break;
+        case Array: x = "[...]"; break;
+        case Object: x = "{...}"; break;
+      }
       return '"' + x + '"';
     }).join(",");
   }).join("\n");
