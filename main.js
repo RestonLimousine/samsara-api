@@ -187,11 +187,15 @@ for (var i = 0; i < ops.length; i++) {
         innerDiv = document.createElement("div"),
         executeP = document.createElement("p"),
         executeA = document.createElement("a"),
+        preDiv = document.createElement("div"),
         pre = document.createElement("pre"),
+        preLabel = document.createElement("h4"),
         inputs = {},
         config = {pre: pre};
     
-    pre.style.whiteSpace = "pre-wrap";
+    preLabel.innerText = "Results:";
+    preDiv.appendChild(preLabel);
+    preDiv.appendChild(pre);
     
     for (var i = 2; i < op.length; i += 2) {
       (function (label, name) {
