@@ -242,11 +242,13 @@ for (var i = 0; i < ops.length; i++) {
     preDLCSV.onclick = function () {
       var path = preDLCSV.value || "";
       path = path.split(/\./);
+      console.log(path);
       var res = lastResult;
       for (var i = 0; i < path.length; i++) {
+        console.log(res);
         res = res[i];
       }
-      if (res && res.constructor === Array) {
+      if (res && (res.constructor === Array)) {
         console.log(res);
       }
     }
