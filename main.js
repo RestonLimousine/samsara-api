@@ -55,7 +55,7 @@ function sendRequest (config) {
   });
   config.callback = function (data, text) {
     console.log(data);
-    config.pre.innerText = text;
+    config.pre.innerText = JSON.stringify(data, null, 2);
   }
   sendReq(config);
 }
