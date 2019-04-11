@@ -154,20 +154,22 @@ function createDriver (config) {
 }
 
 var div = document.createElement("div"),
-    ops = {
-      "Create Driver": [createDriver, "Driver Name", "name", "Driver ID", "id"],
-      "Get Driver Report": [getDriverReport]
-    },
+    ops = [
+      ["Create Driver", createDriver, "Driver Name", "name", "Driver ID", "id"],
+      ["Get Driver Report", getDriverReport]
+    ],
     showingDiv,
     voidLink = "javascript:void(0)";
 
 div.style.borderBottom = "1px solid gray";
 
-for (var opNm in ops) {
-  (function (opNm) {
+ops.sortByKey(0);
+
+for (var i = 0; i < ops.length; i++) {
+  (function (op) {
     var config = {},
-        op = ops[opNm],
-        opFn = op[0],
+        opNm = op[0],
+        opFn = op[1],
         opDiv = document.createElement("div"),
         opA = document.createElement("a"),
         innerDiv = document.createElement("div"),
@@ -193,7 +195,7 @@ for (var opNm in ops) {
     opDiv.appendChild(opA);
     opDiv.appendChild(innerDiv);
     div.appendChild(opDiv);
-  })(opNm);
+  })(ops[i]);
 }
 
 document.body.innerHTML = "";
