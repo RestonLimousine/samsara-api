@@ -209,8 +209,7 @@ for (var i = 0; i < ops.length; i++) {
     preClear.innerText = "[clear] ";
     preClear.onclick = function () { pre.innerText = ""; };
     preDLText.href = voidLink;
-    preDLText.innertText = "[download plain text] ";
-    
+    preDLText.innerText = "[download plain text] ";
     preDLText.onclick = function () {
       downloadContent({
         filename: fileName,
