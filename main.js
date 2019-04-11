@@ -288,7 +288,7 @@ for (var i = 0; i < ops.length; i++) {
     preDLCSVInput.style.marginLeft = "1em";
     preDLCSVP.appendChild(preDLCSVInput);
     
-    for (var i = 0; i < params; i += 2) {
+    for (var i = 0; i < params.length; i += 2) {
       (function (label, name) {
         var p = document.createElement("p"),
             b = document.createElement("b"),
@@ -299,7 +299,7 @@ for (var i = 0; i < ops.length; i++) {
         p.appendChild(input);
         innerDiv.appendChild(p);
         inputs[name] = input;
-      })(op[i], op[i + 1]);
+      })(params[i], params[i + 1]);
     }
     
     nameA.href = voidLink;
