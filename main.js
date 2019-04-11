@@ -179,7 +179,13 @@ var div = document.createElement("div"),
       ["Send Request", sendRequest, "Endpoint", "endpoint", "Method", "method", "Params", "params"]
     ],
     showingDiv,
-    voidLink = "javascript:void(0)";
+    voidLink = "javascript:void(0)",
+    freshA = function (innerText) {
+      var a = document.createElement("a");
+      a.href = voidLink;
+      a.innerText = innerText;
+      return a;
+    };
 
 div.style.border = "1px solid gray";
 div.style.borderBottom = "none";
@@ -198,22 +204,19 @@ for (var i = 0; i < ops.length; i++) {
         preDiv = document.createElement("div"),
         pre = document.createElement("pre"),
         preLabel = document.createElement("b"),
-        preClear = document.createElement("a"),
-        preDLText = document.createElement("a"),
+        preClear = freshA("[clear]"),
+        preDLText = freshA("[download plain text]"),
         preDLCSVLabel = document.createElement("b"),
         preDLCSVDiv = document.createElement("div"),
         preDLCSVInput = document.createElement("input"),
-        preDLCSVSubmit = document.createElement("a"),
+        preDLCSVSubmit = freshA("download"),
         preLabelP = document.createElement("p"),
         inputs = {},
         config = {pre: pre},
         fileName = opNm.toLowerCase().replace(/ /, "_");
     
-    preClear.href = voidLink;
-    preClear.innerText = "[clear] ";
     preClear.onclick = function () { pre.innerText = ""; };
-    preDLText.href = voidLink;
-    preDLText.innerText = "[download plain text] ";
+    preClear.style.marginLeft = "1em";
     preDLText.onclick = function () {
       downloadContent({
         filename: fileName,
@@ -221,6 +224,7 @@ for (var i = 0; i < ops.length; i++) {
         ext: "txt"
       });
     };
+    preDLText.style.marginLeft = "1em";
     preLabel.innerText = "Results: ";
     preLabelP.appendChild(preLabel);
     preLabelP.appendChild(preClear);
@@ -233,8 +237,7 @@ for (var i = 0; i < ops.length; i++) {
     preDLCSVDiv.appendChild(preDLCSVLabel);
     preDLCSVInput.type = "text";
     preDLCSVDiv.appendChild(preDLCSVInput);
-    preDLCSVSubmit.href = voidLink;
-    preDLCSVSubmit.innerText = " download";
+    preDLCSVSubmit.style.marginLeft = "1em";
     preDLCSVDiv.appendChild(preDLCSVSubmit);
     
     for (var i = 2; i < op.length; i += 2) {
