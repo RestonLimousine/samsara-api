@@ -1,4 +1,4 @@
-var accessToken, lastResult, thisPre;
+var accessToken, lastResult, wrapUp;
 
 Array.prototype.sortBy = function (f) {
   return this.sort(function (x, y) {
@@ -38,10 +38,10 @@ var sendReq = function (config) {
       params = config.params,
       req = new XMLHttpRequest();
   req.addEventListener("load", function () {
-    var rsp = this.responseText;
-    lastResult = JSON.parse(rsp);
-    thisPre.innerText = config.finalText || JSON.stringify(lastResult, null, 2);
-    if (cb) cb(lastResult, rsp);
+    var rsp = this.responseText,
+        res = JSON.parse(rsp);
+    if (cb) cb(res, rsp);
+    wrapUp(res);
   });
   params = (params ? "&" + params.map(function (x) { return x.join("="); }).join("&") : "");
   uri = "https://api.samsara.com/v1" + uri + "?access_token=" + accessToken;
@@ -195,9 +195,21 @@ function createDriver (config) {
 
 var div = document.createElement("div"),
     ops = [
-      ["Create Driver", createDriver, "Driver Name", "name", "Driver ID", "id"],
-      ["Get Driver Report", getDriverReport],
-      ["Send Request", sendRequest, "Endpoint", "endpoint", "Method", "method", "Params", "params"]
+      {
+        label: "Create Driver",
+        fn: createDriver,
+        params: ["Driver Name", "name", "Driver ID", "id"]
+      },
+      {
+        label: "Get Driver Report",
+        fn: getDriverReport,
+        finalText: "download initiated"
+      },
+      {
+        label: "Send Request",
+        fn: sendRequest,
+        params: ["Endpoint", "endpoint", "Method", "method", "Params", "params"]
+      }
     ],
     showingDiv,
     voidLink = "javascript:void(0)",
@@ -210,12 +222,13 @@ var div = document.createElement("div"),
 
 div.style.border = "1px solid gray";
 div.style.borderBottom = "none";
-ops.sortByKey(0);
+ops.sortByKey("label");
 
 for (var i = 0; i < ops.length; i++) {
   (function (op) {
-    var opNm = op[0],
-        opFn = op[1],
+    var opNm = op.label,
+        opFn = op.fn,
+        params = op.params || [],
         opDiv = document.createElement("div"),
         nameA = document.createElement("a"),
         nameP = document.createElement("p"),
@@ -276,7 +289,7 @@ for (var i = 0; i < ops.length; i++) {
     preDLCSVInput.style.marginLeft = "1em";
     preDLCSVP.appendChild(preDLCSVInput);
     
-    for (var i = 2; i < op.length; i += 2) {
+    for (var i = 0; i < params; i += 2) {
       (function (label, name) {
         var p = document.createElement("p"),
             b = document.createElement("b"),
@@ -307,6 +320,10 @@ for (var i = 0; i < ops.length; i++) {
       }
       pre.innerText = "please wait...";
       thisPre = pre;
+      wrapUp = function (res) {
+        lastResult = res;
+        pre.innerText = op.finalText || JSON.stringify(res, null, 2);
+      }
       opFn(config);
     }
     executeP.appendChild(executeA);
