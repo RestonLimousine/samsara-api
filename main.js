@@ -129,6 +129,7 @@ var downloadCSV = function (config) {
       rows = config.rows;
   rows = rows.map(function (row) {
     return row.map(function (x) {
+      x = (typeof x === "undefined" || typeof x === "null" ? "" : x);
       switch (x.constructor) {
         case String: x = x.replace(/"/g, '""'); break;
         case Array: x = "[...]"; break;
