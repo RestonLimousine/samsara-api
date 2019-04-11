@@ -319,15 +319,15 @@ for (var i = 0; i < ops.length; i++) {
         config[inputName] = inputs[inputName].value;
       }
       pre.innerText = "please wait...";
-      var config = op.makeConfig(config),
-          cb = config.callback,
+      var conf = op.makeConfig(config),
+          cb = conf.callback,
           newCB = function (res, rsp) {
             if (cb) cb(res, rsp);
             lastResult = res;
             pre.innerText = op.finalText || JSON.stringify(res, null, 2);
           };
-      config.callback = newCB;
-      op.op(config);
+      conf.callback = newCB;
+      op.op(conf);
     }
     executeP.appendChild(executeA);
     
