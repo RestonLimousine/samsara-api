@@ -185,9 +185,9 @@ for (var i = 0; i < ops.length; i++) {
         b.innerText = label + ": ";
         p.appendChild(b);
         input.type = "text";
-        input.name = name;
         p.appendChild(input);
         innerDiv.appendChild(p);
+        config[name] = input;
       })(op[i], op[i + 1]);
     }
     
@@ -203,6 +203,11 @@ for (var i = 0; i < ops.length; i++) {
     executeA.href = voidLink;
     executeA.textContent = "Execute";
     executeA.onclick = function () {
+      for (var inputName in config) {
+        (function (input) {
+          config[inputName] = input.value;
+        })(config[inputName]);
+      }
       opFn(config);
     }
     executeP.appendChild(executeA);
