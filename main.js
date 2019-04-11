@@ -244,7 +244,7 @@ for (var i = 0; i < ops.length; i++) {
       path = path.split(/\./);
       var res = lastResult;
       for (var i = 0; i < path.length; i++) {
-        res = lastResult[i];
+        res = res[i];
       }
       if (res && res.constructor === Array) {
         console.log(res);
