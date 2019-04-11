@@ -144,7 +144,7 @@ var div = document.createElement("div"),
       "Get Driver Report": [getDriverReport]
     };
 
-var showingDiv ={};
+var showingDiv;
 for (var opNm in ops) {
   (function (opNm) {
     var config = {},
@@ -157,7 +157,7 @@ for (var opNm in ops) {
     opA.href = "#";
     opA.textContent = opNm;
     opA.onclick = function () {
-      showingDiv.style.display = "none";
+      if (showingDiv) showingDiv.style.display = "none";
       showingDiv = innerDiv;
       innerDiv.style.display = "";
     }
