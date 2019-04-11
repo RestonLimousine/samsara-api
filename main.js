@@ -31,6 +31,15 @@ function mdy (d, delim) {
   return s.join(delim || "");
 }
 
+function wrapCB (config, cb) {
+  var wrapUp = config.callback;
+  config.callback = function (res, rsp) {
+    cb(res, rsp);
+    wrapUp(res, rsp);
+  }
+  return config;
+}
+
 var sendReq = function (config) {
   var uri = config.endpoint,
       mtd = config.method,
@@ -160,7 +169,7 @@ function createAndDownloadCSV (config) {
 }
 
 var getDriverReport = function (config) {
-  config.callback = function (rows) {
+  wrapCB(config, function (rows) {
     downloadCSV({
       filename: "drivers",
       headers: ["Name", "ID", "Sign Ins"],
@@ -170,23 +179,22 @@ var getDriverReport = function (config) {
         return [row.name, row.id, row.signIns];
       })
     });
-  };
+  });
   getDrivers(config);
 }
 
 function createDriver (config) {
-  sendReq({
-    endpoint: "/fleet/drivers/create",
-    method: "POST",
-    params: [
-      ["name", config.name],
-      ["username", config.id],
-      ["password", config.id],
-      ["eldPcEnabled", true],
-      ["eldYmEnabled", true],
-      ["tagIds", [100835]]
-    ]
-  });
+  config.endpoint = "/fleet/drivers/create",
+  config.method = "POST",
+  config.params = [
+    ["name", config.name],
+    ["username", config.id],
+    ["password", config.id],
+    ["eldPcEnabled", true],
+    ["eldYmEnabled", true],
+    ["tagIds", [100835]]
+  ];
+  sendReq(config);
 }
 
 var div = document.createElement("div"),
@@ -315,14 +323,12 @@ for (var i = 0; i < ops.length; i++) {
         config[inputName] = inputs[inputName].value;
       }
       pre.innerText = "please wait...";
-      var cb = config.callback,
-          wrapUp = function (res, rsp) {
-            if (cb) cb(res, rsp);
+      var wrapUp = function (res, rsp) {
             lastResult = res;
             pre.innerText = op.finalText || JSON.stringify(res, null, 2);
           };
       config.callback = wrapUp;
-      opFn(config, wrapUp);
+      opFn(config);
     }
     executeP.appendChild(executeA);
     
