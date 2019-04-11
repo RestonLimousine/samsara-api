@@ -139,6 +139,24 @@ var downloadCSV = function (config) {
   downloadContent(config);
 }
 
+function createAndDownloadCSV (config) {
+  var content = config.content,
+      first = content[0];
+  config.headers = [];
+  config.rows = [];
+  for (var prop in first) {
+    config.headers.push(prop);
+  }
+  for (var i = 0; i < content.length; i++) {
+    var row = [];
+    for (var j = 0; j < config.headers.length; j++) {
+      row.push(content[i][j]);
+    }
+    config.rows.push(row);
+  }
+  downloadCSV(config);
+}
+
 var getDriverReport = function () {
   getDrivers({
     callback: function (rows) {
@@ -249,7 +267,7 @@ for (var i = 0; i < ops.length; i++) {
         res = res[path[i]];
       }
       if (res && (res.constructor === Array)) {
-        console.log(res);
+        createAndDownloadCSV({filename: fileName, content: res});
       }
     }
     preDLCSVP.appendChild(preDLCSV);
