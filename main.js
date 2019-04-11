@@ -242,7 +242,7 @@ for (var i = 0; i < ops.length; i++) {
     innerDiv.style.paddingLeft = "2em";
     innerDiv.style.paddingRight = "2em";
     innerDiv.appendChild(executeP);
-    innerDiv.appendChild(pre);
+    innerDiv.appendChild(preDiv);
     
     opDiv.style.paddingLeft = "1em";
     opDiv.style.borderBottom = "1px solid gray";
