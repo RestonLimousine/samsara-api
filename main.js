@@ -185,6 +185,9 @@ for (var opNm in ops) {
     innerDiv.style.display = "none";
     innerDiv.style.paddingLeft = "2em";
     innerDiv.appendChild(innerA);
+    opDiv.style.padding = "1em";
+    opDiv.style.border = "1px solid gray";
+    opDiv.style.borderBottom = "none";
     opDiv.appendChild(opA);
     opDiv.appendChild(innerDiv);
     div.appendChild(opDiv);
