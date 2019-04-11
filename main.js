@@ -87,7 +87,7 @@ var getDrivers = function (config) {
 }
 
 var downloadReport = function (config) {
-  var file = config.file,
+  var file = config.filename,
       headers = config.headers,
       rows = config.rows;
   rows = rows.map(function (row) {
@@ -111,11 +111,15 @@ var downloadReport = function (config) {
 var getDriverReport = function () {
   getDrivers({
     callback: function (rows) {
-      downloadReport("drivers", ["Name", "ID", "Sign Ins"], rows.sortBy(function (row) {
-        return (row.signIns || "z");
-      }).map(function (row) {
-        return [row.name, row.id, row.signIns];
-      }));
+      downloadReport({
+        filename: "drivers",
+        headers: ["Name", "ID", "Sign Ins"],
+        rows: rows.sortBy(function (row) {
+          return (row.signIns || "z");
+        }).map(function (row) {
+          return [row.name, row.id, row.signIns];
+        })
+      });
     }
   });
 }
