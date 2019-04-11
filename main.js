@@ -246,7 +246,7 @@ for (var i = 0; i < ops.length; i++) {
       var res = lastResult;
       for (var i = 0; i < path.length; i++) {
         console.log(res);
-        res = res[i];
+        res = res[path[i]];
       }
       if (res && (res.constructor === Array)) {
         console.log(res);
