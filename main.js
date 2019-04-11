@@ -144,7 +144,7 @@ var div = document.createElement("div"),
       "Get Driver Report": [getDriverReport]
     };
 
-var showingDiv;
+var showingDiv ={};
 for (var opNm in ops) {
   (function (opNm) {
     var config = {},
