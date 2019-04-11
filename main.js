@@ -157,10 +157,12 @@ var div = document.createElement("div"),
     ops = {
       "Create Driver": [createDriver, "Driver Name", "name", "Driver ID", "id"],
       "Get Driver Report": [getDriverReport]
-    };
-
-var showingDiv,
+    },
+    showingDiv,
     voidLink = "javascript:void(0)";
+
+div.style.borderBottom = "1px solid gray";
+
 for (var opNm in ops) {
   (function (opNm) {
     var config = {},
