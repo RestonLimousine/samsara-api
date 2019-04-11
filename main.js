@@ -40,7 +40,8 @@ var sendReq = function (config) {
   req.addEventListener("load", function () {
     var rsp = this.responseText;
     lastResult = JSON.parse(rsp);
-    cb(lastResult, rsp);
+    config.pre.innerText = JSON.stringify(lastResult, null, 2);
+    if (cb) cb(lastResult, rsp);
   });
   params = (params ? "&" + params.map(function (x) { return x.join("="); }).join("&") : "");
   uri = "https://api.samsara.com/v1" + uri + "?access_token=" + accessToken;
@@ -54,9 +55,6 @@ function sendRequest (config) {
   config.params = (config.params || "").split(/&/).map(function (x) {
     return x.split(/=/);
   });
-  config.callback = function (data, text) {
-    config.pre.innerText = JSON.stringify(data, null, 2);
-  }
   sendReq(config);
 }
 
@@ -182,9 +180,6 @@ function createDriver (config) {
   sendReq({
     endpoint: "/fleet/drivers/create",
     method: "POST",
-    callback: function (x, s) {
-      console.log(s);
-    },
     params: [
       ["name", config.name],
       ["username", config.id],
