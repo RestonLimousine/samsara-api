@@ -209,7 +209,7 @@ for (var i = 0; i < ops.length; i++) {
     preClear.onclick = function () { pre.innerText = ""; };
     preDLText.href = voidLink;
     preDLText.innertText = "[download plain text] ";
-    preDLText.onclick = function () { 
+    preDLText.onclick = null;
     preLabel.innerText = "Results: ";
     preLabelP.appendChild(preLabel);
     preLabelP.appendChild(preClear);
