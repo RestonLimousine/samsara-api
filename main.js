@@ -144,7 +144,8 @@ var div = document.createElement("div"),
       "Get Driver Report": [getDriverReport]
     };
 
-var showingDiv;
+var showingDiv,
+    voidLink = "javascript:void(0)";
 for (var opNm in ops) {
   (function (opNm) {
     var config = {},
@@ -154,14 +155,14 @@ for (var opNm in ops) {
         opA = document.createElement("a"),
         innerDiv = document.createElement("div"),
         innerA = document.createElement("a");
-    opA.href = "#";
+    opA.href = voidLink;
     opA.textContent = opNm;
     opA.onclick = function () {
       if (showingDiv) showingDiv.style.display = "none";
       showingDiv = innerDiv;
       innerDiv.style.display = "";
     }
-    innerA.href = "#";
+    innerA.href = voidLink;
     innerA.textContent = "Execute";
     innerA.onclick = function () {
       opFn(config);
@@ -194,7 +195,3 @@ var getVehicleReport = function () {
   });
 };
 */
-
-console.log(
-  "To download a list of all drivers, type getDriverReport() and press Enter"
-);
