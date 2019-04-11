@@ -172,7 +172,8 @@ for (var i = 0; i < ops.length; i++) {
         opDiv = document.createElement("div"),
         opA = document.createElement("a"),
         innerDiv = document.createElement("div"),
-        innerA = document.createElement("a");
+        executeP = document.createElement("p"),
+        execute = document.createElement("a");
     
     for (var i = 2; i < op.length; i += 2) {
       (function (label, name) {
@@ -196,15 +197,16 @@ for (var i = 0; i < ops.length; i++) {
       innerDiv.style.display = "";
     }
     
-    innerA.href = voidLink;
-    innerA.textContent = "Execute";
-    innerA.onclick = function () {
+    execute.href = voidLink;
+    execute.textContent = "Execute";
+    execute.onclick = function () {
       opFn(config);
     }
+    executeP.appendChild(execute);
     
     innerDiv.style.display = "none";
     innerDiv.style.paddingLeft = "2em";
-    innerDiv.appendChild(innerA);
+    innerDiv.appendChild(executeP);
     
     opDiv.style.padding = "1em";
     opDiv.style.border = "1px solid gray";
