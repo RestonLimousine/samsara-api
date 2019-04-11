@@ -161,7 +161,8 @@ var div = document.createElement("div"),
     showingDiv,
     voidLink = "javascript:void(0)";
 
-div.style.borderBottom = "1px solid gray";
+div.style.border = "1px solid gray";
+div.style.borderBottom = "none";
 ops.sortByKey(0);
 
 for (var i = 0; i < ops.length; i++) {
@@ -211,8 +212,7 @@ for (var i = 0; i < ops.length; i++) {
     innerDiv.appendChild(executeP);
     
     opDiv.style.paddingLeft = "1em";
-    opDiv.style.border = "1px solid gray";
-    opDiv.style.borderBottom = "none";
+    opDiv.style.borderBottom = "1px solid gray";
     opDiv.appendChild(nameP);
     opDiv.appendChild(innerDiv);
     
