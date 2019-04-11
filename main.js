@@ -191,11 +191,6 @@ var div = document.createElement("div"),
         op: sendReq
       },
       {
-        label: "Get Driver Report",
-        finalText: "download initiated",
-        op: getDrivers
-      },
-      {
         label: "Send Request",
         makeConfig: sendRequest,
         params: ["Endpoint", "endpoint", "Method", "method", "Params", "params"],
