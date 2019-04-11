@@ -187,7 +187,7 @@ for (var i = 0; i < ops.length; i++) {
         innerDiv = document.createElement("div"),
         executeP = document.createElement("p"),
         executeA = document.createElement("a"),
-        pre = document.createElement("pre"),\
+        pre = document.createElement("pre"),
         inputs = {},
         config = {pre: pre};
     
