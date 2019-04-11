@@ -204,19 +204,20 @@ for (var i = 0; i < ops.length; i++) {
         preDiv = document.createElement("div"),
         pre = document.createElement("pre"),
         preLabel = document.createElement("b"),
-        preClear = freshA("[clear]"),
-        preDLText = freshA("[download plain text]"),
-        preDLCSVLabel = document.createElement("b"),
+        preClear = freshA("clear"),
+        preClearDiv = document.createElement("div"),
+        preDLText = freshA("download plain text"),
+        preDLTextDiv = document.createElement("div"),
         preDLCSVDiv = document.createElement("div"),
         preDLCSVInput = document.createElement("input"),
-        preDLCSVSubmit = freshA("download"),
+        preDLCSV = freshA("download csv"),
         preLabelP = document.createElement("p"),
         inputs = {},
         config = {pre: pre},
         fileName = opNm.toLowerCase().replace(/ /, "_");
     
     preClear.onclick = function () { pre.innerText = ""; };
-    preClear.style.marginLeft = "1em";
+    preClearDiv.appendChild(preClear);
     preDLText.onclick = function () {
       downloadContent({
         filename: fileName,
@@ -224,21 +225,19 @@ for (var i = 0; i < ops.length; i++) {
         ext: "txt"
       });
     };
-    preDLText.style.marginLeft = "1em";
+    preDLTextDiv.appendChild(preDLText);
     preLabel.innerText = "Results: ";
     preLabelP.appendChild(preLabel);
-    preLabelP.appendChild(preClear);
-    preLabelP.appendChild(preDLText);
+    preLabelP.appendChild(preClearDiv);
+    preLabelP.appendChild(preDLTextDiv);
     preDiv.appendChild(preLabelP);
     preDiv.appendChild(preDLCSVDiv);
     preDiv.appendChild(pre);
     
-    preDLCSVLabel.innerText = "Download CSV: ";
-    preDLCSVDiv.appendChild(preDLCSVLabel);
+    preDLCSVDiv.appendChild(preDLCSV);
     preDLCSVInput.type = "text";
+    preDLCSVInput.placeholder = "path to array";
     preDLCSVDiv.appendChild(preDLCSVInput);
-    preDLCSVSubmit.style.marginLeft = "1em";
-    preDLCSVDiv.appendChild(preDLCSVSubmit);
     
     for (var i = 2; i < op.length; i += 2) {
       (function (label, name) {
