@@ -40,7 +40,7 @@ var sendReq = function (config) {
   req.addEventListener("load", function () {
     var rsp = this.responseText;
     lastResult = JSON.parse(rsp);
-    thisPre.innerText = JSON.stringify(lastResult, null, 2);
+    thisPre.innerText = config.finalText || JSON.stringify(lastResult, null, 2);
     if (cb) cb(lastResult, rsp);
   });
   params = (params ? "&" + params.map(function (x) { return x.join("="); }).join("&") : "");
@@ -169,10 +169,10 @@ var getDriverReport = function (config) {
         return (row.signIns || "z");
       }).map(function (row) {
         return [row.name, row.id, row.signIns];
-      }),
-      callback: function () { thisPre.innerText = "download initiated"; }
+      })
     });
   };
+  config.finalText = "download initiated";
   getDrivers(config);
 }
 
