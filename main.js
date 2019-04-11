@@ -326,8 +326,11 @@ for (var i = 0; i < ops.length; i++) {
             lastResult = res;
             pre.innerText = op.finalText || JSON.stringify(res, null, 2);
           };
-      conf.callback = newCB;
-      op.op(conf);
+      for (var prop in conf) {
+        config[prop] = conf[prop];
+      }
+      config.callback = newCB;
+      op.op(config);
     }
     executeP.appendChild(executeA);
     
