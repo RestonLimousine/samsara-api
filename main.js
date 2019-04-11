@@ -319,9 +319,7 @@ for (var i = 0; i < ops.length; i++) {
         config[inputName] = inputs[inputName].value;
       }
       pre.innerText = "please wait...";
-      var out = op.makeConfig(config),
-          operation = out[0],
-          config = out[1],
+      var config = op.makeConfig(config),
           cb = config.callback,
           newCB = function (res, rsp) {
             if (cb) cb(res, rsp);
@@ -329,7 +327,7 @@ for (var i = 0; i < ops.length; i++) {
             pre.innerText = op.finalText || JSON.stringify(res, null, 2);
           };
       config.callback = newCB;
-      operation(config);
+      op.op(config);
     }
     executeP.appendChild(executeA);
     
