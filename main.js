@@ -169,7 +169,8 @@ var getDriverReport = function (config) {
         return (row.signIns || "z");
       }).map(function (row) {
         return [row.name, row.id, row.signIns];
-      })
+      }),
+      callback: function () { thisPre.innerText = "download initiated"; }
     });
   };
   getDrivers(config);
