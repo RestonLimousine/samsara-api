@@ -108,9 +108,23 @@ var getDrivers = function (config) {
   });
 }
 
-var downloadReport = function (config) {
-  var file = config.filename,
-      headers = config.headers,
+function downloadContent (config) {
+  var a = document.createElement("a"),
+      ext = config.ext,
+      file = config.filename,
+      content = config.content;
+  file = "samsara_" + file + "_";
+  file = file + mdy(new Date());
+  file = file + ext;
+  a.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
+  a.setAttribute('download', file);
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+var downloadCSV = function (config) {
+  var headers = config.headers,
       rows = config.rows;
   rows = rows.map(function (row) {
     return row.map(function (x) {
@@ -119,21 +133,15 @@ var downloadReport = function (config) {
     }).join(",");
   }).join("\n");
   headers = headers.join(",");
-  var content = headers + "\n" + rows,
-      a = document.createElement("a");
-  file = "samsara_" + file + "_";
-  file = file + mdy(new Date());
-  file = file + ".csv";
-  a.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
-  a.setAttribute('download', file);
-  document.body.appendChild(a);
-  a.click();
+  config.content = headers + "\n" + rows;
+  config.ext = ".csv";
+  downloadContent(config);
 }
 
 var getDriverReport = function () {
   getDrivers({
     callback: function (rows) {
-      downloadReport({
+      downloadCSV({
         filename: "drivers",
         headers: ["Name", "ID", "Sign Ins"],
         rows: rows.sortBy(function (row) {
@@ -191,16 +199,21 @@ for (var i = 0; i < ops.length; i++) {
         pre = document.createElement("pre"),
         preLabel = document.createElement("b"),
         preClear = document.createElement("a"),
+        preDLText = document.createElement("a"),
         preLabelP = document.createElement("p"),
         inputs = {},
         config = {pre: pre};
     
     preClear.href = voidLink;
-    preClear.innerText = "(clear)";
+    preClear.innerText = "[clear] ";
     preClear.onclick = function () { pre.innerText = ""; };
+    preDLText.href = voidLink;
+    preDLText.innertText = "[download plain text] ";
+    preDLText.onclick = function () { 
     preLabel.innerText = "Results: ";
     preLabelP.appendChild(preLabel);
     preLabelP.appendChild(preClear);
+    preLabelP.appendChild(preDLText);
     preDiv.appendChild(preLabelP);
     preDiv.appendChild(pre);
     
