@@ -31,15 +31,6 @@ function mdy (d, delim) {
   return s.join(delim || "");
 }
 
-function wrapCB (config, cb) {
-  var wrapUp = config.callback;
-  config.callback = function (res, rsp) {
-    cb(res, rsp);
-    wrapUp(res, rsp);
-  }
-  return config;
-}
-
 var sendReq = function (config) {
   var uri = config.endpoint,
       mtd = config.method,
@@ -59,11 +50,12 @@ var sendReq = function (config) {
   req.send();
 };
 
-function sendRequest (config) {
-  config.params = (config.params || "").split(/&/).map(function (x) {
-    return x.split(/=/);
-  });
-  sendReq(config);
+function sendRequest (inputs) {
+  return {
+    params: (inputs.params || "").split(/&/).map(function (x) {
+      return x.split(/=/);
+    })
+  };
 }
 
 var getDrivers = function (config) {
@@ -168,51 +160,56 @@ function createAndDownloadCSV (config) {
   downloadCSV(config);
 }
 
-var getDriverReport = function (config) {
-  wrapCB(config, function (rows) {
-    downloadCSV({
-      filename: "drivers",
-      headers: ["Name", "ID", "Sign Ins"],
-      rows: rows.sortBy(function (row) {
-        return (row.signIns || "z");
-      }).map(function (row) {
-        return [row.name, row.id, row.signIns];
-      })
-    });
-  });
-  getDrivers(config);
+var getDriverReport = function (inputs) {
+  return {
+    callback: function (rows) {
+      downloadCSV({
+        filename: "drivers",
+        headers: ["Name", "ID", "Sign Ins"],
+        rows: rows.sortBy(function (row) {
+          return (row.signIns || "z");
+        }).map(function (row) {
+          return [row.name, row.id, row.signIns];
+        })
+      });
+    }
+  };
 }
 
-function createDriver (config) {
-  config.endpoint = "/fleet/drivers/create",
-  config.method = "POST",
-  config.params = [
-    ["name", config.name],
-    ["username", config.id],
-    ["password", config.id],
-    ["eldPcEnabled", true],
-    ["eldYmEnabled", true],
-    ["tagIds", [100835]]
-  ];
-  sendReq(config);
+function createDriver (inputs) {
+  return {
+    endpoint: "/fleet/drivers/create",
+    method: "POST",
+    params: [
+      ["name", inputs.name],
+      ["username", inputs.id],
+      ["password", inputs.id],
+      ["eldPcEnabled", true],
+      ["eldYmEnabled", true],
+      ["tagIds", [100835]]
+    ]
+  };
 }
 
 var div = document.createElement("div"),
     ops = [
       {
         label: "Create Driver",
-        fn: createDriver,
-        params: ["Driver Name", "name", "Driver ID", "id"]
+        makeConfig: createDriver,
+        params: ["Driver Name", "name", "Driver ID", "id"],
+        op: sendReq
       },
       {
         label: "Get Driver Report",
-        fn: getDriverReport,
-        finalText: "download initiated"
+        makeConfig: getDriverReport,
+        finalText: "download initiated",
+        op: getDrivers
       },
       {
         label: "Send Request",
-        fn: sendRequest,
-        params: ["Endpoint", "endpoint", "Method", "method", "Params", "params"]
+        makeConfig: sendRequest,
+        params: ["Endpoint", "endpoint", "Method", "method", "Params", "params"],
+        op: sendReq
       }
     ],
     showingDiv,
@@ -231,7 +228,6 @@ ops.sortByKey("label");
 for (var i = 0; i < ops.length; i++) {
   (function (op) {
     var opNm = op.label,
-        opFn = op.fn,
         params = op.params || [],
         opDiv = document.createElement("div"),
         nameA = document.createElement("a"),
@@ -323,12 +319,17 @@ for (var i = 0; i < ops.length; i++) {
         config[inputName] = inputs[inputName].value;
       }
       pre.innerText = "please wait...";
-      var wrapUp = function (res, rsp) {
+      var out = op.makeConfig(config),
+          operation = out[0],
+          config = out[1],
+          cb = config.callback,
+          newCB = function (res, rsp) {
+            if (cb) cb(res, rsp);
             lastResult = res;
             pre.innerText = op.finalText || JSON.stringify(res, null, 2);
           };
-      config.callback = wrapUp;
-      opFn(config);
+      config.callback = newCB;
+      operation(config);
     }
     executeP.appendChild(executeA);
     
