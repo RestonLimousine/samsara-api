@@ -200,6 +200,10 @@ for (var i = 0; i < ops.length; i++) {
         preLabel = document.createElement("b"),
         preClear = document.createElement("a"),
         preDLText = document.createElement("a"),
+        preDLCSVLabel = document.createElement("b"),
+        preDLCSVDiv = document.createElement("div"),
+        preDLCSVInput = document.createElement("input"),
+        preDLCSVSubmit = document.createElement("a"),
         preLabelP = document.createElement("p"),
         inputs = {},
         config = {pre: pre},
@@ -221,8 +225,19 @@ for (var i = 0; i < ops.length; i++) {
     preLabelP.appendChild(preLabel);
     preLabelP.appendChild(preClear);
     preLabelP.appendChild(preDLText);
+    preLabelP.appendChild(preDLCSVA);
     preDiv.appendChild(preLabelP);
+    preDiv.appendChild(preDLCSVDiv);
     preDiv.appendChild(pre);
+    
+    preDLCSVDiv.style.display = "none";
+    preDLCSVLabel.innerText = "Download CSV: ";
+    preDLCSVDiv.appendChild(preDLCSVLabel);
+    preDLCSVInput.type = "text";
+    preDLCSVDiv.appendChild(preDLCSVInput);
+    preDLCSVSubmit.href = voidLink;
+    preDLCSVSubmit.innerText = " download";
+    preDLCSVDiv.appendChild(preDLCSVSubmit);
     
     for (var i = 2; i < op.length; i += 2) {
       (function (label, name) {
