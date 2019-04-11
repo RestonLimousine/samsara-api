@@ -259,9 +259,11 @@ for (var i = 0; i < ops.length; i++) {
       var path = preDLCSVInput.value || "";
       path = path.split(/\./);
       var res = lastResult;
+      console.log(res, path);
       for (var i = 0; i < path.length; i++) {
         res = res[path[i]];
       }
+      console.log(res);
       if (res && (res.constructor === Array)) {
         createAndDownloadCSV({filename: fileName, content: res});
       }
