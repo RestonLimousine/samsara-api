@@ -162,7 +162,6 @@ var div = document.createElement("div"),
     voidLink = "javascript:void(0)";
 
 div.style.borderBottom = "1px solid gray";
-
 ops.sortByKey(0);
 
 for (var i = 0; i < ops.length; i++) {
@@ -174,6 +173,19 @@ for (var i = 0; i < ops.length; i++) {
         opA = document.createElement("a"),
         innerDiv = document.createElement("div"),
         innerA = document.createElement("a");
+    
+    for (var i = 2; i < op.length; i += 2) {
+      (function (label, name) {
+        var l = document.createElement("label"),
+            input = document.createElement("input");
+        l.innerText = label;
+        innerDiv.appendChild(l);
+        input.type = "text";
+        input.name = name;
+        innerDiv.appendChild(input);
+      })(op[i], op[i + 1]);
+    }
+    
     opA.href = voidLink;
     opA.textContent = opNm;
     opA.onclick = function () {
@@ -181,19 +193,23 @@ for (var i = 0; i < ops.length; i++) {
       showingDiv = innerDiv;
       innerDiv.style.display = "";
     }
+    
     innerA.href = voidLink;
     innerA.textContent = "Execute";
     innerA.onclick = function () {
       opFn(config);
     }
+    
     innerDiv.style.display = "none";
     innerDiv.style.paddingLeft = "2em";
     innerDiv.appendChild(innerA);
+    
     opDiv.style.padding = "1em";
     opDiv.style.border = "1px solid gray";
     opDiv.style.borderBottom = "none";
     opDiv.appendChild(opA);
     opDiv.appendChild(innerDiv);
+    
     div.appendChild(opDiv);
   })(ops[i]);
 }
