@@ -213,7 +213,7 @@ for (var i = 0; i < ops.length; i++) {
     opDiv.style.paddingLeft = "1em";
     opDiv.style.border = "1px solid gray";
     opDiv.style.borderBottom = "none";
-    opDiv.appendChild(opA);
+    opDiv.appendChild(nameP);
     opDiv.appendChild(innerDiv);
     
     div.appendChild(opDiv);
