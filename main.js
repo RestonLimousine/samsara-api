@@ -211,7 +211,6 @@ for (var i = 0; i < ops.length; i++) {
     nameA.onclick = function () {
       if (showingDiv) showingDiv.style.display = "none";
       showingDiv = innerDiv;
-      pre.innerText = "please wait...";
       innerDiv.style.display = "";
     }
     nameP.appendChild(nameA);
@@ -225,6 +224,7 @@ for (var i = 0; i < ops.length; i++) {
         })(config[inputName]);
       }
       config.pre = pre;
+      pre.innerText = "please wait...";
       opFn(config);
     }
     executeP.appendChild(executeA);
