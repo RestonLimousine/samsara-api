@@ -129,8 +129,15 @@ var downloadCSV = function (config) {
       x = (x === undefined || x === null) ? "" : x;
       switch (x.constructor) {
         case String: x = x.replace(/"/g, '""'); break;
-        case Array: x = "[...]"; break;
-        case Object: x = "{...}"; break;
+        case Array: x = "[" + x.length + "]"; break;
+        case Object:
+          var n = 0;
+          for (var p in x) {
+            n++;
+          }
+          var c = n > 0 ? "..." : "";
+          x = "{" + c + "}";
+          break;
       }
       return '"' + x + '"';
     }).join(",");
