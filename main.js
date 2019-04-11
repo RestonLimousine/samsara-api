@@ -225,7 +225,6 @@ for (var i = 0; i < ops.length; i++) {
     preLabelP.appendChild(preLabel);
     preLabelP.appendChild(preClear);
     preLabelP.appendChild(preDLText);
-    preLabelP.appendChild(preDLCSVA);
     preDiv.appendChild(preLabelP);
     preDiv.appendChild(preDLCSVDiv);
     preDiv.appendChild(pre);
