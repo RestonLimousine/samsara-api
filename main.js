@@ -177,10 +177,10 @@ for (var i = 0; i < ops.length; i++) {
     for (var i = 2; i < op.length; i += 2) {
       (function (label, name) {
         var p = document.createElement("p"),
-            l = document.createElement("label"),
+            b = document.createElement("b"),
             input = document.createElement("input");
-        l.innerText = label;
-        p.appendChild(l);
+        b.innerText = label + ": ";
+        p.appendChild(b);
         input.type = "text";
         input.name = name;
         p.appendChild(input);
