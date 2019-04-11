@@ -170,10 +170,11 @@ for (var i = 0; i < ops.length; i++) {
         opNm = op[0],
         opFn = op[1],
         opDiv = document.createElement("div"),
-        opA = document.createElement("a"),
+        nameA = document.createElement("a"),
+        nameP = document.createElement("p"),
         innerDiv = document.createElement("div"),
         executeP = document.createElement("p"),
-        execute = document.createElement("a");
+        executeA = document.createElement("a");
     
     for (var i = 2; i < op.length; i += 2) {
       (function (label, name) {
@@ -189,26 +190,27 @@ for (var i = 0; i < ops.length; i++) {
       })(op[i], op[i + 1]);
     }
     
-    opA.href = voidLink;
-    opA.textContent = opNm;
-    opA.onclick = function () {
+    nameA.href = voidLink;
+    nameA.textContent = opNm;
+    nameA.onclick = function () {
       if (showingDiv) showingDiv.style.display = "none";
       showingDiv = innerDiv;
       innerDiv.style.display = "";
     }
+    nameP.appendChild(nameA);
     
-    execute.href = voidLink;
-    execute.textContent = "Execute";
-    execute.onclick = function () {
+    executeA.href = voidLink;
+    executeA.textContent = "Execute";
+    executeA.onclick = function () {
       opFn(config);
     }
-    executeP.appendChild(execute);
+    executeP.appendChild(executeA);
     
     innerDiv.style.display = "none";
     innerDiv.style.paddingLeft = "2em";
     innerDiv.appendChild(executeP);
     
-    opDiv.style.padding = "1em";
+    opDiv.style.paddingLeft = "1em";
     opDiv.style.border = "1px solid gray";
     opDiv.style.borderBottom = "none";
     opDiv.appendChild(opA);
