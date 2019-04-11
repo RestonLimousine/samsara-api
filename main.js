@@ -160,24 +160,24 @@ function createAndDownloadCSV (config) {
   downloadCSV(config);
 }
 
-var getDriverReport = function () {
-  getDrivers({
-    callback: function (rows) {
-      downloadCSV({
-        filename: "drivers",
-        headers: ["Name", "ID", "Sign Ins"],
-        rows: rows.sortBy(function (row) {
-          return (row.signIns || "z");
-        }).map(function (row) {
-          return [row.name, row.id, row.signIns];
-        })
-      });
-    }
-  });
+var getDriverReport = function (config) {
+  config.callback = function (rows) {
+    downloadCSV({
+      filename: "drivers",
+      headers: ["Name", "ID", "Sign Ins"],
+      rows: rows.sortBy(function (row) {
+        return (row.signIns || "z");
+      }).map(function (row) {
+        return [row.name, row.id, row.signIns];
+      })
+    });
+  };
+  getDrivers(config);
 }
 
 function createDriver (config) {
   sendReq({
+    pre: config.pre,
     endpoint: "/fleet/drivers/create",
     method: "POST",
     params: [
