@@ -49,6 +49,17 @@ var sendReq = function (config) {
   req.send();
 };
 
+function sendRequest (config) {
+  config.params = config.params.split(/&/).map(function (x) {
+    return x.split(/=/);
+  });
+  config.callback = function (data, text) {
+    console.log(data);
+    config.pre.innerText = text;
+  }
+  sendReq(config);
+}
+
 var getDrivers = function (config) {
   var cb = config.callback,
       out = [];
@@ -156,7 +167,8 @@ function createDriver (config) {
 var div = document.createElement("div"),
     ops = [
       ["Create Driver", createDriver, "Driver Name", "name", "Driver ID", "id"],
-      ["Get Driver Report", getDriverReport]
+      ["Get Driver Report", getDriverReport],
+      ["Send Request", sendRequest, "Endpoint", "endpoint", "Method", "method", "Params", "params"]
     ],
     showingDiv,
     voidLink = "javascript:void(0)";
@@ -175,7 +187,8 @@ for (var i = 0; i < ops.length; i++) {
         nameP = document.createElement("p"),
         innerDiv = document.createElement("div"),
         executeP = document.createElement("p"),
-        executeA = document.createElement("a");
+        executeA = document.createElement("a"),
+        pre = document.createElement("pre");
     
     for (var i = 2; i < op.length; i += 2) {
       (function (label, name) {
@@ -215,6 +228,7 @@ for (var i = 0; i < ops.length; i++) {
     innerDiv.style.display = "none";
     innerDiv.style.paddingLeft = "2em";
     innerDiv.appendChild(executeP);
+    innerDiv.appendChild(pre);
     
     opDiv.style.paddingLeft = "1em";
     opDiv.style.borderBottom = "1px solid gray";
