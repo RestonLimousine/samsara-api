@@ -144,9 +144,11 @@ var div = document.createElement("div"),
       "Get Driver Report": [getDriverReport]
     };
 
+var showingDiv;
 for (var opNm in ops) {
   (function (opNm) {
-    var op = ops[opNm],
+    var config = {},
+        op = ops[opNm],
         opFn = op[0],
         opDiv = document.createElement("div"),
         opA = document.createElement("a"),
@@ -155,11 +157,17 @@ for (var opNm in ops) {
     opA.href = "#";
     opA.textContent = opNm;
     opA.onclick = function () {
+      showingDiv.style.display = "none";
+      showingDiv = innerDiv;
       innerDiv.style.display = "";
     }
     innerA.href = "#";
     innerA.textContent = "Execute";
+    innerA.onclick = function () {
+      op(config);
+    }
     innerDiv.style.display = "none";
+    innerDiv.style.paddingLeft = "2em";
     innerDiv.appendChild(innerA);
     opDiv.appendChild(opA);
     opDiv.appendChild(innerDiv);
