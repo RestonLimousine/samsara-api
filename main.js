@@ -1,4 +1,4 @@
-var accessToken, lastResult, wrapUp;
+var accessToken, lastResult;
 
 Array.prototype.sortBy = function (f) {
   return this.sort(function (x, y) {
@@ -31,7 +31,7 @@ function mdy (d, delim) {
   return s.join(delim || "");
 }
 
-var sendReq = function (config) {
+var sendReq = function (config, wrapUp) {
   var uri = config.endpoint,
       mtd = config.method,
       cb = config.callback,
@@ -51,20 +51,19 @@ var sendReq = function (config) {
   req.send();
 };
 
-function sendRequest (config) {
+function sendRequest (config, wrapUp) {
   config.params = (config.params || "").split(/&/).map(function (x) {
     return x.split(/=/);
   });
-  sendReq(config);
+  sendReq(config, wrapUp);
 }
 
-var getDrivers = function (config) {
+var getDrivers = function (config, wrapUp) {
   var cb = config.callback,
       out = [];
   sendReq({
     endpoint: "/fleet/drivers",
     method: "GET",
-    finalText: config.finalText,
     callback: function (x) {
       x = x.drivers;
       var t = (new Date).getTime(),
@@ -75,7 +74,6 @@ var getDrivers = function (config) {
           sendReq({
             endpoint: "/fleet/hos_authentication_logs",
             method: "GET",
-            finalText: config.finalText,
             callback: function (y) {
               var logs = y.authenticationLogs || [];
               /*
@@ -101,11 +99,13 @@ var getDrivers = function (config) {
               ["startMs", t-(24*60*60*1000*7)],
               ["endMs", t]
             ]
-          });
+          },
+          wrapUp);
         })(i);
       }
     }
-  });
+  },
+  wrapUp);
 }
 
 function downloadContent (config) {
@@ -162,7 +162,7 @@ function createAndDownloadCSV (config) {
   downloadCSV(config);
 }
 
-var getDriverReport = function (config) {
+var getDriverReport = function (config, wrapUp) {
   config.callback = function (rows) {
     downloadCSV({
       filename: "drivers",
@@ -174,11 +174,10 @@ var getDriverReport = function (config) {
       })
     });
   };
-  config.finalText = "download initiated";
-  getDrivers(config);
+  getDrivers(config, wrapUp);
 }
 
-function createDriver (config) {
+function createDriver (config, wrapUp) {
   sendReq({
     endpoint: "/fleet/drivers/create",
     method: "POST",
@@ -190,7 +189,7 @@ function createDriver (config) {
       ["eldYmEnabled", true],
       ["tagIds", [100835]]
     ]
-  });
+  }, wrapUp);
 }
 
 var div = document.createElement("div"),
@@ -319,12 +318,11 @@ for (var i = 0; i < ops.length; i++) {
         config[inputName] = inputs[inputName].value;
       }
       pre.innerText = "please wait...";
-      thisPre = pre;
-      wrapUp = function (res) {
+      var wrapUp = function (res) {
         lastResult = res;
         pre.innerText = op.finalText || JSON.stringify(res, null, 2);
       }
-      opFn(config);
+      opFn(config, wrapUp);
     }
     executeP.appendChild(executeA);
     
