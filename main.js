@@ -164,7 +164,7 @@ for (var opNm in ops) {
     innerA.href = "#";
     innerA.textContent = "Execute";
     innerA.onclick = function () {
-      op(config);
+      opFn(config);
     }
     innerDiv.style.display = "none";
     innerDiv.style.paddingLeft = "2em";
