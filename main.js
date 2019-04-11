@@ -188,7 +188,7 @@ for (var i = 0; i < ops.length; i++) {
         executeP = document.createElement("p"),
         executeA = document.createElement("a"),
         pre = document.createElement("pre"),
-        config = {pre: pre};
+        config = {};
     
     for (var i = 2; i < op.length; i += 2) {
       (function (label, name) {
@@ -221,6 +221,7 @@ for (var i = 0; i < ops.length; i++) {
           config[inputName] = input.value;
         })(config[inputName]);
       }
+      config.pre = pre;
       opFn(config);
     }
     executeP.appendChild(executeA);
