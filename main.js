@@ -190,6 +190,8 @@ for (var i = 0; i < ops.length; i++) {
         pre = document.createElement("pre"),
         config = {};
     
+    pre.style.whiteSpace = "pre-wrap";
+    
     for (var i = 2; i < op.length; i += 2) {
       (function (label, name) {
         var p = document.createElement("p"),
@@ -228,6 +230,7 @@ for (var i = 0; i < ops.length; i++) {
     
     innerDiv.style.display = "none";
     innerDiv.style.paddingLeft = "2em";
+    innerDiv.style.paddingRight = "2em";
     innerDiv.appendChild(executeP);
     innerDiv.appendChild(pre);
     
