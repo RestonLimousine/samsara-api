@@ -129,7 +129,7 @@ var downloadCSV = function (config) {
       rows = config.rows;
   rows = rows.map(function (row) {
     return row.map(function (x) {
-      x = (typeof x === "undefined" || typeof x === "null" ? "" : x);
+      x = (typeof x === "undefined" || typeof x === "null") ? "" : x;
       switch (x.constructor) {
         case String: x = x.replace(/"/g, '""'); break;
         case Array: x = "[...]"; break;
@@ -155,7 +155,8 @@ function createAndDownloadCSV (config) {
   for (var i = 0; i < content.length; i++) {
     var row = [];
     for (var j = 0; j < config.headers.length; j++) {
-      row.push(content[i][j]);
+      var header = config.headers[j];
+      row.push(content[i][header]);
     }
     config.rows.push(row);
   }
