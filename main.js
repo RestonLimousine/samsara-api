@@ -179,8 +179,7 @@ ops.sortByKey(0);
 
 for (var i = 0; i < ops.length; i++) {
   (function (op) {
-    var config = {},
-        opNm = op[0],
+    var opNm = op[0],
         opFn = op[1],
         opDiv = document.createElement("div"),
         nameA = document.createElement("a"),
@@ -188,7 +187,8 @@ for (var i = 0; i < ops.length; i++) {
         innerDiv = document.createElement("div"),
         executeP = document.createElement("p"),
         executeA = document.createElement("a"),
-        pre = document.createElement("pre");
+        pre = document.createElement("pre"),
+        config = {pre: pre};
     
     for (var i = 2; i < op.length; i += 2) {
       (function (label, name) {
