@@ -276,6 +276,7 @@ for (var i = 0; i < ops.length; i++) {
     });
     
     aInP("view table", function () {
+      clearPre();
       var table = makeTable(thisResult);
       preDiv.replaceChild(table, pre);
     });
@@ -299,7 +300,6 @@ for (var i = 0; i < ops.length; i++) {
       for (var i = 0; i < path.length; i++) {
         res = res[path[i]];
       }
-      console.log(res);
       if (res && (res.constructor === Array)) {
         createAndDownloadCSV({filename: fileName, content: res});
       }
