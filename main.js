@@ -195,6 +195,7 @@ function makeTable (res, input) {
         var cell = document.createElement("div");
         cell.style.gridRow = (i + 1) + " / " + (i + 2);
         cell.innerText = row[j];
+        cell.className = "cell";
         grid.appendChild(cell);
       }
     }
