@@ -196,6 +196,9 @@ function makeTable (res, input) {
         cell.style.gridRow = (i + 1) + " / " + (i + 2);
         cell.innerText = row[j];
         cell.className = "cell";
+        if (j === row.length - 1) {
+          cell.className += " row-end";
+        }
         grid.appendChild(cell);
       }
     }
