@@ -264,7 +264,8 @@ for (var i = 0; i < ops.length; i++) {
     
     function clearPre () {
       pre.innerText = "";
-      preDiv.replaceChild(pre, preDiv.childNodes[0]);
+      var cn = preDiv.childNodes;
+      preDiv.replaceChild(pre, cn[cn.length - 1]);
     }
     
     aInP("clear", clearPre);
