@@ -388,8 +388,9 @@ for (var i = 0; i < ops.length; i++) {
 
 var link = document.createElement("link");
 link.href = "https://restonlimousine.github.io/samsara-api/main.css";
+link.rel = "stylesheet";
 
-document.head.appendChild(style);
+document.head.appendChild(link);
 document.body.appendChild(div);
 
 /*
