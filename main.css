@@ -2,9 +2,16 @@
   width: 75vw;
   height: 75vh;
   overflow: auto;
-  border: 1px solid gray;
+  border-left: 1px solid gray;
+  border-top: 1px solid gray;
+  margin-bottom: 2em;
 }
 
 .grid {
   display: grid;
+}
+
+.cell {
+  border-right: 1px solid gray;
+  border-bottom: 1px solid gray;
 }
