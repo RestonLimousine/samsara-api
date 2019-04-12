@@ -1,3 +1,5 @@
+document.body.innerHTML = "";
+
 var accessToken, lastResult;
 
 Array.prototype.sortBy = function (f) {
@@ -232,41 +234,43 @@ for (var i = 0; i < ops.length; i++) {
         preDiv = document.createElement("div"),
         pre = document.createElement("pre"),
         preLabel = document.createElement("b"),
-        preClear = freshA("clear"),
-        preClearP = document.createElement("p"),
-        preDLText = freshA("download JSON"),
-        preDLTextP = document.createElement("p"),
-        preDLCSVP = document.createElement("p"),
+        aInP = function (text, onclick) {
+          var p = document.createElement("p"),
+              a = freshA(text);
+          a.onclick = onclick;
+          p.appendChild(a);
+          p.style.marginLeft = "2em";
+          preDiv.appendChild(p);
+          for (var i = 2; i < arguments.length; i++) {
+            p.appendChild(arguments[i]);
+          }
+        },
         preDLCSVInput = document.createElement("input"),
-        preDLCSV = freshA("download csv"),
         preLabelP = document.createElement("p"),
         inputs = {},
         config = {},
         fileName = opNm.toLowerCase().replace(/ /, "_");
     
-    preClearP.style.marginLeft = "2em";
-    preDLTextP.style.marginLeft = "2em";
-    preDLCSVP.style.marginLeft = "2em";
+    preLabel.innerText = "Results: ";
+    preLabelP.appendChild(preLabel);
+    preDiv.appendChild(preLabelP);
+    preDiv.appendChild(pre);
     
-    preClear.onclick = function () { pre.innerText = ""; };
-    preClearP.appendChild(preClear);
-    preDLText.onclick = function () {
+    aInP("clear", function () { pre.innerText = ""; });
+    
+    aInP("download JSON", function () {
       downloadContent({
         filename: fileName,
         content: pre.innerText,
         ext: "txt"
       });
-    };
-    preDLTextP.appendChild(preDLText);
-    preLabel.innerText = "Results: ";
-    preLabelP.appendChild(preLabel);
-    preDiv.appendChild(preLabelP);
-    preDiv.appendChild(preClearP);
-    preDiv.appendChild(preDLTextP);
-    preDiv.appendChild(preDLCSVP);
-    preDiv.appendChild(pre);
+    });
     
-    preDLCSV.onclick = function () {
+    preDLCSVInput.type = "text";
+    preDLCSVInput.placeholder = "path to array";
+    preDLCSVInput.style.marginLeft = "1em";
+    
+    aInP("download CSV", function () {
       var path = preDLCSVInput.value || "";
       path = (path === "") ? [] : path.split(/\./);
       var res = lastResult;
@@ -277,12 +281,7 @@ for (var i = 0; i < ops.length; i++) {
       if (res && (res.constructor === Array)) {
         createAndDownloadCSV({filename: fileName, content: res});
       }
-    }
-    preDLCSVP.appendChild(preDLCSV);
-    preDLCSVInput.type = "text";
-    preDLCSVInput.placeholder = "path to array";
-    preDLCSVInput.style.marginLeft = "1em";
-    preDLCSVP.appendChild(preDLCSVInput);
+    }, preDLCSVInput);
     
     for (var i = 0; i < params.length; i += 2) {
       (function (label, name) {
@@ -345,7 +344,6 @@ for (var i = 0; i < ops.length; i++) {
   })(ops[i]);
 }
 
-document.body.innerHTML = "";
 document.body.appendChild(div);
 
 /*
