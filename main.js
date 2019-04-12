@@ -262,18 +262,24 @@ for (var i = 0; i < ops.length; i++) {
         preDiv = document.createElement("div"),
         pre = document.createElement("pre"),
         preLabel = document.createElement("b"),
-        aInP = function (text, onclick) {
+        aInP = function (text, onclick, hasInput) {
           var p = document.createElement("p"),
-              a = freshA(text);
-          a.onclick = onclick;
+              a = freshA(text),
+              input = document.createElement("input");
+          a.onclick = function (e) { onclick(input); };
           p.appendChild(a);
+          if (hasInput) {
+            input.type = "text";
+            input.placeholder = "path to array";
+            input.style.marginLeft = "1em";
+            p.appendChild(input);
+          }
           p.style.marginLeft = "2em";
           preDiv.appendChild(p);
           for (var i = 2; i < arguments.length; i++) {
             p.appendChild(arguments[i]);
           }
         },
-        preDLCSVInput = document.createElement("input"),
         preLabelP = document.createElement("p"),
         inputs = {},
         config = {},
@@ -297,11 +303,11 @@ for (var i = 0; i < ops.length; i++) {
       pre.innerText = JSON.stringify(thisResult, null, 2);
     });
     
-    aInP("view table", function () {
+    aInP("view table", function (input) {
       clearPre();
-      var table = makeTable(thisResult);
+      var table = makeTable(thisResult, input);
       if (table) preDiv.replaceChild(table, pre);
-    });
+    }, input);
     
     aInP("download JSON", function () {
       downloadContent({
@@ -311,16 +317,12 @@ for (var i = 0; i < ops.length; i++) {
       });
     });
     
-    preDLCSVInput.type = "text";
-    preDLCSVInput.placeholder = "path to array";
-    preDLCSVInput.style.marginLeft = "1em";
-    
-    aInP("download CSV", function () {
-      var arr = getArray(thisResult, preDLCSVInput);
+    aInP("download CSV", function (input) {
+      var arr = getArray(thisResult, input);
       if (arr) {
         createAndDownloadCSV({filename: fileName, content: arr});
       }
-    }, preDLCSVInput);
+    }, true);
     
     for (var i = 0; i < params.length; i += 2) {
       (function (label, name) {
