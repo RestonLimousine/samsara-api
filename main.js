@@ -192,7 +192,7 @@ function makeTable (res, input) {
     var topNum = document.createElement("div");
     topNum.style.gridRow = "1 / 2";
     topNum.className = "cell header row-num";
-    topNum.innerText = " ";
+    topNum.innerText = "#";
     grid.appendChild(topNum);
     for (var h = 0; h < table.headers.length; h++) {
       var header = document.createElement("div");
@@ -206,7 +206,7 @@ function makeTable (res, input) {
       var rowNum = document.createElement("div");
       rowNum.style.gridRow = gridRow;
       rowNum.className = "cell row-num";
-      rowNum.innerText = i + 2;
+      rowNum.innerText = i + 1;
       grid.appendChild(rowNum);
       var row = table.rows[i];
       for (var j = 0; j < row.length; j++) {
