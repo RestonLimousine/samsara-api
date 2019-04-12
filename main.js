@@ -186,11 +186,16 @@ function makeTable (res, input) {
   if (arr) {
     grid.className = "grid";
     var table = prepareForTable(arr);
+    var topNum = document.createElement("div");
+    topNum.style.gridRow = "1 / 2";
+    topNum.className = "cell header";
+    grid.appendChild(topNum);
+    var innerTopNum = document.createElement("div");
+    topNum.appendChild(innerTopNum);
     for (var h = 0; h < table.headers.length; h++) {
       var header = document.createElement("div");
       header.innerText = table.headers[h];
       header.style.gridRow = "1 / 2";
-      header.style.gridColumn = (h + 2) + " / " + (h + 3);
       header.className = "cell header";
       grid.appendChild(header);
     }
@@ -210,14 +215,6 @@ function makeTable (res, input) {
         grid.appendChild(cell);
       }
     }
-    var topNum = document.createElement("div");
-    topNum.style.gridRow = "1 / 2";
-    topNum.style.gridColumn = "1 / 2";
-    topNum.className = "cell header";
-    grid.appendChild(topNum);
-    topNum = topNum.cloneNode();
-    topNum.className = "cell row-num";
-    grid.appendChild(topNum);
     return grid;
   }
 }
