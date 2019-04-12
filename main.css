@@ -1,7 +1,7 @@
 .grid-container {
   width: 75vw;
   height: 75vh;
-  overflow: auto;
+  overflow: scroll;
   border-left: 1px solid gray;
   border-top: 1px solid gray;
   margin-bottom: 2em;
