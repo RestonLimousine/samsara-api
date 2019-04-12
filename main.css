@@ -2,6 +2,7 @@
   width: 75vw;
   height: 75vh;
   overflow: auto;
+  border: 1px solid gray;
 }
 
 .grid {
