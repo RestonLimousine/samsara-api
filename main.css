@@ -16,6 +16,13 @@
   border-bottom: 1px solid gray;
 }
 
+.first-cell {
+  position: sticky;
+  left: 0;
+}
+
 .header {  
   background-color: #eeeeee;
+  position: sticky;
+  top: 0;
 }
