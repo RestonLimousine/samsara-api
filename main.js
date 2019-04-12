@@ -124,8 +124,8 @@ function downloadContent (config) {
 }
 
 var downloadCSV = function (config) {
-  var headers = config.headers,
-      rows = config.rows;
+  var headers = config.content.headers,
+      rows = config.content.rows;
   rows = rows.map(function (row) {
     return row.map(function (x) {
       x = x.replace(/"/g, '""');
@@ -152,19 +152,17 @@ function formatCell (value) {
   return x.toString();
 }
 
-function prepareForTable (config) {
-  var content = config.content,
-      first = content[0];
-  config.headers = [];
-  config.rows = [];
+function prepareForTable (arr) {
+  var first = arr[0],
+      config = {headers: [], rows: []};
   for (var prop in first) {
     config.headers.push(prop);
   }
-  for (var i = 0; i < content.length; i++) {
+  for (var i = 0; i < arr.length; i++) {
     var row = [];
     for (var j = 0; j < config.headers.length; j++) {
       var header = config.headers[j],
-          cell = content[i][header];
+          cell = arr[i][header];
       cell = formatCell(cell);
       row.push(cell);
     }
@@ -173,14 +171,38 @@ function prepareForTable (config) {
   return config;
 }
 
-function makeTable () {
-  var div = document.createElement("div");
-  div.innerText = "table";
-  return div;
+function getArray (res, input) {
+  var path = input.value || "";
+  path = (path === "") ? [] : path.split(/\./);
+  for (var i = 0; i < path.length; i++) {
+    res = res[path[i]];
+  }
+  if (res && res.constructor === Array) return res;
+}
+
+function makeTable (res, input) {
+  var container = document.createElement("div"),
+      grid = document.createElement("div"),
+      arr = getArray(res, input);
+  if (arr) {
+    container.className = "grid-container";
+    grid.className = "grid";
+    var table = prepareForTable(arr);
+    for (var i = 0; i < table.rows.length; i++) {
+      var row = table.rows[i];
+      for (var j = 0; j < row.length; j++) {
+        var cell = row[j],
+            cellDiv = document.createElement("div");
+        cellDiv.style.gridRow = (i + 1) + " / " + (i + 2);
+        grid.appendChild(cellDiv);
+      }
+    }
+    return container;
+  }
 }
 
 function createAndDownloadCSV (config) {
-  config = prepareForTable(config);
+  config.content = prepareForTable(config.content);
   downloadCSV(config);
 }
 
@@ -278,7 +300,7 @@ for (var i = 0; i < ops.length; i++) {
     aInP("view table", function () {
       clearPre();
       var table = makeTable(thisResult);
-      preDiv.replaceChild(table, pre);
+      if (table) preDiv.replaceChild(table, pre);
     });
     
     aInP("download JSON", function () {
@@ -294,14 +316,9 @@ for (var i = 0; i < ops.length; i++) {
     preDLCSVInput.style.marginLeft = "1em";
     
     aInP("download CSV", function () {
-      var path = preDLCSVInput.value || "";
-      path = (path === "") ? [] : path.split(/\./);
-      var res = thisResult;
-      for (var i = 0; i < path.length; i++) {
-        res = res[path[i]];
-      }
-      if (res && (res.constructor === Array)) {
-        createAndDownloadCSV({filename: fileName, content: res});
+      var arr = getArray(thisResult, preDLCSVInput);
+      if (arr) {
+        createAndDownloadCSV({filename: fileName, content: arr});
       }
     }, preDLCSVInput);
     
@@ -369,6 +386,10 @@ for (var i = 0; i < ops.length; i++) {
   })(ops[i]);
 }
 
+var link = document.createElement("link");
+link.href = "https://restonlimousine.github.io/samsara-api/main.css";
+
+document.head.appendChild(style);
 document.body.appendChild(div);
 
 /*
