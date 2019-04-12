@@ -16,7 +16,7 @@
   border-bottom: 1px solid gray;
 }
 
-.first-cell {
+.row-num {
   position: sticky;
   left: 0;
 }
