@@ -181,10 +181,13 @@ function getArray (res, input) {
 }
 
 function makeTable (res, input) {
-  var grid = document.createElement("div"),
+  var container = document.createElement("div"),
+      grid = document.createElement("div"),
       arr = getArray(res, input);
   if (arr) {
+    container.className = "grid-container";
     grid.className = "grid";
+    container.appendChild(grid);
     var table = prepareForTable(arr);
     var topNum = document.createElement("div");
     topNum.style.gridRow = "1 / 2";
@@ -215,7 +218,7 @@ function makeTable (res, input) {
         grid.appendChild(cell);
       }
     }
-    return grid;
+    return container;
   }
 }
 
