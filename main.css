@@ -1,13 +1,13 @@
 .grid-container {
+}
+
+.grid {
   width: 75vw;
   height: 75vh;
   overflow: scroll;
   border-left: 1px solid gray;
   border-top: 1px solid gray;
   margin-bottom: 2em;
-}
-
-.grid {
   display: grid;
   grid-template-columns: min-content;
 }
