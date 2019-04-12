@@ -307,7 +307,7 @@ for (var i = 0; i < ops.length; i++) {
       clearPre();
       var table = makeTable(thisResult, input);
       if (table) preDiv.replaceChild(table, pre);
-    }, input);
+    }, true);
     
     aInP("download JSON", function () {
       downloadContent({
