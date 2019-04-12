@@ -254,7 +254,6 @@ for (var i = 0; i < ops.length; i++) {
     preLabel.innerText = "Results: ";
     preLabelP.appendChild(preLabel);
     preDiv.appendChild(preLabelP);
-    preDiv.appendChild(pre);
     
     aInP("clear", function () { pre.innerText = ""; });
     
@@ -296,6 +295,8 @@ for (var i = 0; i < ops.length; i++) {
         inputs[name] = input;
       })(params[i], params[i + 1]);
     }
+    
+    preDiv.appendChild(pre);
     
     nameA.href = voidLink;
     nameA.textContent = opNm;
