@@ -214,9 +214,6 @@ function makeTable (res, input) {
         cell.style.gridRow = gridRow;
         cell.innerText = row[j];
         cell.className = "cell";
-        if (j === row.length - 1) {
-          cell.className += " row-end";
-        }
         grid.appendChild(cell);
       }
     }
