@@ -32,8 +32,6 @@
 }
 
 .top-left > div {
-  width: 100%;
-  height: 100%;
   background-color: #eeeeee;
   position: absolute;
   top: 0;
