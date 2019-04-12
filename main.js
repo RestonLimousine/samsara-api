@@ -195,6 +195,7 @@ function makeTable (res, input) {
     grid.appendChild(topNum);
     var innerTopNum = document.createElement("div");
     topNum.appendChild(innerTopNum);
+    topNum.appendChild(innerTopNum.cloneNode());
     for (var h = 0; h < table.headers.length; h++) {
       var header = document.createElement("div");
       header.innerText = table.headers[h];
