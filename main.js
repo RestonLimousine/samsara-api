@@ -189,6 +189,10 @@ function makeTable (res, input) {
     grid.className = "grid";
     container.appendChild(grid);
     var table = prepareForTable(arr);
+    var topNum = document.createElement("div");
+    topNum.style.gridRow = "1 / 2";
+    topNum.className = "cell header row-num";
+    grid.appendChild(topNum);
     for (var h = 0; h < table.headers.length; h++) {
       var header = document.createElement("div");
       header.innerText = table.headers[h];
@@ -197,10 +201,15 @@ function makeTable (res, input) {
       grid.appendChild(header);
     }
     for (var i = 0; i < table.rows.length; i++) {
+      var gridRow = (i + 2) + " / " + (i + 3);
+      var rowNum = document.createElement("div");
+      rowNum.style.gridRow = gridRow;
+      rowNum.className = "cell row-num";
+      grid.appendChild(rowNum);
       var row = table.rows[i];
       for (var j = 0; j < row.length; j++) {
         var cell = document.createElement("div");
-        cell.style.gridRow = (i + 2) + " / " + (i + 3);
+        cell.style.gridRow = gridRow;
         cell.innerText = row[j];
         cell.className = "cell";
         if (j === row.length - 1) {
