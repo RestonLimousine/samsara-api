@@ -176,7 +176,7 @@ function prepareForTable (config) {
 function makeTable () {
   var div = document.createElement("div");
   div.innerText = "table";
-  return div.
+  return div;
 }
 
 function createAndDownloadCSV (config) {
