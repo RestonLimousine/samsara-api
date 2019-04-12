@@ -181,21 +181,15 @@ function getArray (res, input) {
 }
 
 function makeTable (res, input) {
-  var container = document.createElement("div"),
-      grid = document.createElement("div"),
+  var grid = document.createElement("div"),
       arr = getArray(res, input);
   if (arr) {
-    container.className = "grid-container";
     grid.className = "grid";
-    container.appendChild(grid);
     var table = prepareForTable(arr);
     var topNum = document.createElement("div");
     topNum.style.gridRow = "1 / 2";
     topNum.style.gridColumn = "1 / 2";
     topNum.className = "cell header";
-    grid.appendChild(topNum);
-    topNum = topNum.cloneNode();
-    topNum.className = "cell row-num";
     grid.appendChild(topNum);
     for (var h = 0; h < table.headers.length; h++) {
       var header = document.createElement("div");
@@ -220,7 +214,10 @@ function makeTable (res, input) {
         grid.appendChild(cell);
       }
     }
-    return container;
+    topNum = topNum.cloneNode();
+    topNum.className = "cell row-num";
+    grid.appendChild(topNum);
+    return grid;
   }
 }
 
