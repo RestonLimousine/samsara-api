@@ -191,7 +191,7 @@ function makeTable (res, input) {
     var table = prepareForTable(arr);
     var topNum = document.createElement("div");
     topNum.style.gridRow = "1 / 2";
-    topNum.className = "cell header top-left";
+    topNum.className = "cell top-left";
     grid.appendChild(topNum);
     var innerTopNum = document.createElement("div");
     topNum.appendChild(innerTopNum);
