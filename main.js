@@ -173,6 +173,12 @@ function prepareForTable (config) {
   return config;
 }
 
+function makeTable () {
+  var div = document.createElement("div");
+  div.innerText = "table";
+  return div.
+}
+
 function createAndDownloadCSV (config) {
   config = prepareForTable(config);
   downloadCSV(config);
@@ -256,18 +262,27 @@ for (var i = 0; i < ops.length; i++) {
     preLabelP.appendChild(preLabel);
     preDiv.appendChild(preLabelP);
     
-    aInP("clear", function () { pre.innerText = ""; });
+    function clearPre () {
+      pre.innerText = "";
+      preDiv.replaceChild(pre, preDiv.childNodes[0]);
+    }
+    
+    aInP("clear", clearPre);
     
     aInP("view JSON", function () {
+      clearPre();
       pre.innerText = JSON.stringify(thisResult, null, 2);
     });
     
-    aInP("view table", function () { });
+    aInP("view table", function () {
+      var table = makeTable(thisResult);
+      preDiv.replaceChild(table, pre);
+    });
     
     aInP("download JSON", function () {
       downloadContent({
         filename: fileName,
-        content: pre.innerText,
+        content: JSON.stringify(thisResult, null, 2),
         ext: "txt"
       });
     });
@@ -327,6 +342,7 @@ for (var i = 0; i < ops.length; i++) {
           newCB = function (res, rsp) {
             if (cb) res = cb(res, rsp);
             lastResult = thisResult = res;
+            clearPre();
             pre.innerText = JSON.stringify(res, null, 2);
           };
       for (var prop in conf) {
