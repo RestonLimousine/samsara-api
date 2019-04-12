@@ -21,7 +21,7 @@
   left: 0;
 }
 
-.header, .top-left {  
+.header {  
   background-color: #eeeeee;
   position: sticky;
   top: 0;
