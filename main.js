@@ -189,11 +189,18 @@ function makeTable (res, input) {
     grid.className = "grid";
     container.appendChild(grid);
     var table = prepareForTable(arr);
+    for (var h = 0; h < table.headers.length; h++) {
+      var header = document.createElement("div");
+      header.innerText = table.headers[h];
+      header.style.gridRow = "1 / 2";
+      header.className = "cell header";
+      grid.appendChild(header);
+    }
     for (var i = 0; i < table.rows.length; i++) {
       var row = table.rows[i];
       for (var j = 0; j < row.length; j++) {
         var cell = document.createElement("div");
-        cell.style.gridRow = (i + 1) + " / " + (i + 2);
+        cell.style.gridRow = (i + 2) + " / " + (i + 3);
         cell.innerText = row[j];
         cell.className = "cell";
         if (j === row.length - 1) {
