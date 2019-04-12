@@ -15,11 +15,10 @@
 .cell {
   border-right: 1px solid gray;
   border-bottom: 1px solid gray;
+  padding: 5px;
 }
 
 .row-num {
-  position: sticky;
-  left: 0;
   background-color: #eeeeee;
 }
 
@@ -29,9 +28,3 @@
   top: 0;
 }
 
-.header-row-num {
-  background-color: #eeeeee;
-  position: sticky;
-  top: 0;
-  left: 0;
-}
