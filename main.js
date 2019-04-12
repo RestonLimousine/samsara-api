@@ -126,19 +126,7 @@ var downloadCSV = function (config) {
       rows = config.rows;
   rows = rows.map(function (row) {
     return row.map(function (x) {
-      x = (x === undefined || x === null) ? "" : x;
-      switch (x.constructor) {
-        case String: x = x.replace(/"/g, '""'); break;
-        case Array: x = "[" + x.length + "]"; break;
-        case Object:
-          var n = 0;
-          for (var p in x) {
-            n++;
-          }
-          var c = n > 0 ? "..." : "";
-          x = "{" + c + "}";
-          break;
-      }
+      x = x.replace(/"/g, '""');
       return '"' + x + '"';
     }).join(",");
   }).join("\n");
@@ -148,7 +136,21 @@ var downloadCSV = function (config) {
   downloadContent(config);
 }
 
-function createAndDownloadCSV (config) {
+function formatCell (value) {
+  var x = (value === undefined || value === null) ? "" : value;
+  switch (x.constructor) {
+    case Array: x = "[" + x.length + "]"; break;
+    case Object:
+      var n = 0;
+      for (var p in x) { n++; }
+      var c = n > 0 ? "..." : "";
+      x = "{" + c + "}";
+    break;
+  }
+  return x.toString();
+}
+
+function prepareForTable (config) {
   var content = config.content,
       first = content[0];
   config.headers = [];
@@ -159,11 +161,18 @@ function createAndDownloadCSV (config) {
   for (var i = 0; i < content.length; i++) {
     var row = [];
     for (var j = 0; j < config.headers.length; j++) {
-      var header = config.headers[j];
-      row.push(content[i][header]);
+      var header = config.headers[j],
+          cell = content[i][header];
+      cell = formatCell(cell);
+      row.push(cell);
     }
     config.rows.push(row);
   }
+  return config;
+}
+
+function createAndDownloadCSV (config) {
+  config = prepareForTable(config);
   downloadCSV(config);
 }
 
@@ -225,7 +234,7 @@ for (var i = 0; i < ops.length; i++) {
         preLabel = document.createElement("b"),
         preClear = freshA("clear"),
         preClearP = document.createElement("p"),
-        preDLText = freshA("download plain text"),
+        preDLText = freshA("download JSON"),
         preDLTextP = document.createElement("p"),
         preDLCSVP = document.createElement("p"),
         preDLCSVInput = document.createElement("input"),
