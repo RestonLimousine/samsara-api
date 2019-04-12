@@ -189,6 +189,7 @@ function makeTable (res, input) {
     var topNum = document.createElement("div");
     topNum.style.gridRow = "1 / 2";
     topNum.className = "cell header";
+    topNum.innerText = " ";
     grid.appendChild(topNum);
     for (var h = 0; h < table.headers.length; h++) {
       var header = document.createElement("div");
