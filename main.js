@@ -276,9 +276,6 @@ for (var i = 0; i < ops.length; i++) {
           }
           p.style.marginLeft = "2em";
           preDiv.appendChild(p);
-          for (var i = 2; i < arguments.length; i++) {
-            p.appendChild(arguments[i]);
-          }
         },
         preLabelP = document.createElement("p"),
         inputs = {},
