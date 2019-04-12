@@ -9,7 +9,7 @@
 
 .grid {
   display: grid;
-  grid-template-columns: auto;
+  grid-template-columns: min-content;
 }
 
 .cell {
