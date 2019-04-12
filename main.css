@@ -16,12 +16,13 @@
   border-right: 1px solid gray;
   border-bottom: 1px solid gray;
 }
-/*
+
 .row-num {
   position: sticky;
   left: 0;
+  background-color: #eeeeee;
 }
-*/
+
 .header {  
   background-color: #eeeeee;
   position: sticky;
