@@ -192,10 +192,10 @@ function makeTable (res, input) {
     for (var i = 0; i < table.rows.length; i++) {
       var row = table.rows[i];
       for (var j = 0; j < row.length; j++) {
-        var cell = row[j],
-            cellDiv = document.createElement("div");
-        cellDiv.style.gridRow = (i + 1) + " / " + (i + 2);
-        grid.appendChild(cellDiv);
+        var cell = document.createElement("div");
+        cell.style.gridRow = (i + 1) + " / " + (i + 2);
+        cell.innerText = row[j];
+        grid.appendChild(cell);
       }
     }
     return container;
