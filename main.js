@@ -249,13 +249,20 @@ for (var i = 0; i < ops.length; i++) {
         preLabelP = document.createElement("p"),
         inputs = {},
         config = {},
-        fileName = opNm.toLowerCase().replace(/ /, "_");
+        fileName = opNm.toLowerCase().replace(/ /, "_"),
+        thisResult;
     
     preLabel.innerText = "Results: ";
     preLabelP.appendChild(preLabel);
     preDiv.appendChild(preLabelP);
     
     aInP("clear", function () { pre.innerText = ""; });
+    
+    aInP("view JSON", function () {
+      pre.innerText = JSON.stringify(res, null, 2);
+    });
+    
+    aInP("view table", function () { });
     
     aInP("download JSON", function () {
       downloadContent({
@@ -272,7 +279,7 @@ for (var i = 0; i < ops.length; i++) {
     aInP("download CSV", function () {
       var path = preDLCSVInput.value || "";
       path = (path === "") ? [] : path.split(/\./);
-      var res = lastResult;
+      var res = thisResult;
       for (var i = 0; i < path.length; i++) {
         res = res[path[i]];
       }
@@ -319,7 +326,7 @@ for (var i = 0; i < ops.length; i++) {
           cb = conf.callback,
           newCB = function (res, rsp) {
             if (cb) res = cb(res, rsp);
-            lastResult = res;
+            lastResult = thisResult = res;
             pre.innerText = JSON.stringify(res, null, 2);
           };
       for (var prop in conf) {
