@@ -205,6 +205,7 @@ function makeTable (res, input) {
       var rowNum = document.createElement("div");
       rowNum.style.gridRow = gridRow;
       rowNum.className = "cell row-num";
+      rowNum.innerText = i + 2;
       grid.appendChild(rowNum);
       var row = table.rows[i];
       for (var j = 0; j < row.length; j++) {
