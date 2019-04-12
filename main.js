@@ -184,6 +184,7 @@ function makeTable (res, input) {
   var container = document.createElement("div"),
       grid = document.createElement("div"),
       arr = getArray(res, input);
+  console.log(arr);
   if (arr) {
     container.className = "grid-container";
     grid.className = "grid";
