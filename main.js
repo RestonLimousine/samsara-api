@@ -184,10 +184,10 @@ function makeTable (res, input) {
   var container = document.createElement("div"),
       grid = document.createElement("div"),
       arr = getArray(res, input);
-  console.log(arr);
   if (arr) {
     container.className = "grid-container";
     grid.className = "grid";
+    container.appendChild(grid);
     var table = prepareForTable(arr);
     for (var i = 0; i < table.rows.length; i++) {
       var row = table.rows[i];
