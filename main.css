@@ -20,6 +20,8 @@
 
 .row-num {
   background-color: #eeeeee;
+  position: sticky;
+  left: 0;
 }
 
 .header {  
