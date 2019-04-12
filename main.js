@@ -259,7 +259,7 @@ for (var i = 0; i < ops.length; i++) {
     aInP("clear", function () { pre.innerText = ""; });
     
     aInP("view JSON", function () {
-      pre.innerText = JSON.stringify(res, null, 2);
+      pre.innerText = JSON.stringify(thisResult, null, 2);
     });
     
     aInP("view table", function () { });
