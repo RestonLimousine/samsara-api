@@ -1,6 +1,7 @@
 .grid-container {
-  width: 100%;
-  overflow-x: auto;
+  width: 75vw;
+  height: 75vh;
+  overflow: auto;
 }
 
 .grid {
