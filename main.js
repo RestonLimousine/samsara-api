@@ -72,6 +72,7 @@ var getHOSAuthLogs = function (config) {
           done = 0;
       for (var i = 0; i < drivers.length; i++){
         (function (j) {
+          var driver = drivers[j];
           sendReq({
             endpoint: "/fleet/hos_authentication_logs",
             method: "GET",
@@ -81,6 +82,7 @@ var getHOSAuthLogs = function (config) {
                 return log.actionType === "signin";
               }).map(function (log) {
                 log.time = new Date(log.happenedAtMs);
+                log.driver = driver.name;
                 return log;
               }));
               done++;
@@ -90,7 +92,7 @@ var getHOSAuthLogs = function (config) {
               }
             },
             params: [
-              ["driverId", drivers[j].id],
+              ["driverId", driver.id],
               ["startMs", t-(24*60*60*1000*3)],
               ["endMs", t]
             ]
