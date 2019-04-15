@@ -82,7 +82,7 @@ var getHOSAuthLogs = function (config) {
               }).map(function (log) {
                 log.time = new Date(log.happenedAtMs);
                 return log;
-              });
+              }));
               done++;
               if (done === drivers.length) {
                 out.sortByKey("happenedAtMs");
