@@ -79,7 +79,7 @@ var getHOSAuthLogs = function (config) {
             callback: function (y) {
               var logs = y.authenticationLogs || [];
               out = out.concat(logs.filter(function (log) {
-                return log.actionType === "signin";
+                return true; // log.actionType === "signin";
               }).map(function (log) {
                 log.time = new Date(log.happenedAtMs);
                 log.driver = driver.name;
