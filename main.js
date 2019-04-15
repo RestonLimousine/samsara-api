@@ -91,7 +91,7 @@ var getHOSAuthLogs = function (config) {
             },
             params: [
               ["driverId", drivers[j].id],
-              ["startMs", t-(24*60*60*1000*7)],
+              ["startMs", t-(24*60*60*1000*3)],
               ["endMs", t]
             ]
           });
