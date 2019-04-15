@@ -60,44 +60,37 @@ function sendRequest (inputs) {
   };
 }
 
-var getDrivers = function (config) {
+var getHOSAuthLogs = function (config) {
   var cb = config.callback,
       out = [];
   sendReq({
     endpoint: "/fleet/drivers",
     method: "GET",
-    callback: function (x) {
-      x = x.drivers;
+    callback: function (rsp) {
+      var drivers = rsp.drivers;
       var t = (new Date).getTime(),
           done = 0;
-      for (var i = 0; i < x.length; i++){
+      for (var i = 0; i < drivers.length; i++){
         (function (j) {
-          out[j] = x[j];
           sendReq({
             endpoint: "/fleet/hos_authentication_logs",
             method: "GET",
             callback: function (y) {
               var logs = y.authenticationLogs || [];
-              /*
-              logs = logs.filter(function (x) {
-                  return (x.actionType === "signin");
-                }).map(function (x) {
-                  return x.happenedAtMs;
-                }).sort();
-              */
-              var signIns = logs.sortByKey("happenedAtMs").map(function (x) {
-                var d = new Date(x.happenedAtMs);
-                return x.actionType + ": " + dateStr(d);
-              }).join("; ");
-              // out[j].lastSignIn = logs.slice(-1)[0];
-              out[j].signIns = signIns;
+              out = out.concat(logs.filter(function (log) {
+                return log.actionType === "signin";
+              }).map(function (log) {
+                log.time = new Date(log.happenedAtMs);
+                return log;
+              });
               done++;
-              if (done === x.length) {
+              if (done === drivers.length) {
+                out.sortByKey("happenedAtMs");
                 cb(out);
               }
             },
             params: [
-              ["driverId", x[j].id],
+              ["driverId", drivers[j].id],
               ["startMs", t-(24*60*60*1000*7)],
               ["endMs", t]
             ]
@@ -251,6 +244,10 @@ var div = document.createElement("div"),
         makeConfig: sendRequest,
         params: ["Endpoint", "endpoint", "Method", "method", "Params", "params"],
         op: sendReq
+      },
+      {
+        label: "HOS Authentication Logs",
+        op: getHOSAuthLogs
       }
     ],
     showingDiv,
