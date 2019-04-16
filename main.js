@@ -233,6 +233,19 @@ function createDriver (inputs) {
   };
 }
 
+function getVehicleMileage (config) {
+  sendReq({
+    endpoint: "/fleet/list",
+    method: "GET",
+    callback: function (rsp) {
+      config.callback(rsp.vehicles.map(function (veh) {
+        veh.miles = (veh.odometerMeters === null ? "" : Math.floor(veh.odometerMeters * 0.000621371));
+        return veh;
+      }));
+    }
+  });
+}
+
 var div = document.createElement("div"),
     ops = [
       {
@@ -250,6 +263,10 @@ var div = document.createElement("div"),
       {
         label: "HOS Authentication Logs",
         op: getHOSAuthLogs
+      },
+      {
+        label: "Vehicle Mileage",
+        op: getVehicleMileage
       }
     ],
     showingDiv,
