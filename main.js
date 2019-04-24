@@ -425,6 +425,7 @@ for (var i = 0; i < ops.length; i++) {
             headers = lines[0].split(/,/),
             out = [];
         lines = lines.slice(1);
+        console.log(lines);
         for (var i = 0; i < lines.length; i++) {
           var thisLine = lines[i].split(/,/);
           var row = {};
