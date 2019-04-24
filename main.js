@@ -267,10 +267,10 @@ function getVehicleMileage (config) {
 }
 
 function prepareDriverRow (row) {
-  if (line["JobType"].match(/^(006|007|008|010)/)) {
+  if (row["JobType"].match(/^(006|007|008|010)/)) {
     return {
-      "Driver Name": line["FullNamePreferred"],
-      "Driver ID": line["zk_employeeID_p"]
+      "Driver Name": row["FullNamePreferred"],
+      "Driver ID": row["zk_employeeID_p"]
     };
   }
 }
