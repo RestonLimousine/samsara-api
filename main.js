@@ -48,7 +48,7 @@ var sendReq = function (config) {
       } catch {
         res = {message: rsp};
         for (var i = 0; i < params.length; i++) {
-          res[config.params[i][0]] = config.params[i][1];
+          res[params[i][0]] = params[i][1];
         }
       }
       if (cb) cb(res, rsp);
