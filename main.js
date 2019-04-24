@@ -354,13 +354,12 @@ for (var i = 0; i < ops.length; i++) {
       }
     }, true);
     
-    var paramInputs = [],
-        bulkMode = false;
+    var uploaded = null;
     
     if (params.length > 0) {
       var reader = new FileReader();
       reader.addEventListener("loadend", function() {
-        console.log(reader.result);
+        uploaded = reader.result;
       });
       (function (div, a, input) {
         div.appendChild(input);
@@ -369,22 +368,21 @@ for (var i = 0; i < ops.length; i++) {
         a.innerText = "cancel";
         a.onclick = function () {
           input.value = null;
-          for (var i = 0; i < paramInputs.length; i++) {
-            paramInputs[i].disabled = undefined;
+          for (var i in inputs) {
+            inputs[i].disabled = undefined;
           }
           a.style.display = "none";
-          bulkMode = false;
+          uploaded = null;
         }
         a.style.display = "none";
         input.style.display = "inline";
         input.type = "file";
         input.onchange = function (e) {
-          for (var i = 0; i < paramInputs.length; i++) {
-            paramInputs[i].disabled = "disabled";
+          for (var i in inputs) {
+            inputs[i].disabled = "disabled";
           }
           a.style.display = "";
           reader.readAsText(input.files[0]);
-          bulkMode = true;
         }
         innerDiv.appendChild(div);
       })(document.createElement("div"),
@@ -418,27 +416,67 @@ for (var i = 0; i < ops.length; i++) {
     }
     nameP.appendChild(nameA);
     
+    function execute (inputs) {
+      
+    }
+    
     executeA.href = voidLink;
     executeA.textContent = "Execute";
     executeA.onclick = function () {
-      for (var inputName in inputs) {
-        config[inputName] = inputs[inputName].value;
-      }
       pre.innerText = "please wait...";
       op.makeConfig = op.makeConfig || function (x) { return {}; };
-      var conf = op.makeConfig(config),
-          cb = conf.callback,
-          newCB = function (res, rsp) {
-            if (cb) res = cb(res, rsp);
-            lastResult = thisResult = res;
-            clearPre();
-            pre.innerText = JSON.stringify(res, null, 2);
-          };
-      for (var prop in conf) {
-        config[prop] = conf[prop];
+      if (uploaded) {
+        var lines = uploaded.split(/\n/),
+            headers = lines[0].split(/,/),
+            out = [];
+        lines = lines.slice(1);
+        for (var i = 0; i < lines.length; i++) {
+          var thisLine = lines[i].split(/,/);
+          var row = {};
+          for (var j = 0; j < headers.length; j++) {
+            row[headers[j]] = thisLine[j];
+          }
+          for (var inputName in inputs) {
+            if (!(inputName in row)) {
+              throw Error("column header " + inputName + " not found in file");
+            }
+            config[inputName] = row[inputName];
+          }
+          var conf = op.makeConfig(config),
+              cb = conf.callback,
+              newCB = function (res, rsp) {
+                if (cb) res = cb(res, rsp);
+                out.push(res);
+                if (out.count === lines.count) {
+                  lastResult = thisResult = out;
+                  clearPre();
+                  pre.innerText = JSON.stringify(out, null, 2);
+                }
+              };
+          for (var prop in conf) {
+            config[prop] = conf[prop];
+          }
+          config.callback = newCB;
+          op.op(config);
+        }
+      } else {
+        for (var inputName in inputs) {
+          config[inputName] = inputs[inputName].value;
+        }
+        var conf = op.makeConfig(config),
+            cb = conf.callback,
+            newCB = function (res, rsp) {
+              if (cb) res = cb(res, rsp);
+              lastResult = thisResult = res;
+              clearPre();
+              pre.innerText = JSON.stringify(res, null, 2);
+            };
+        for (var prop in conf) {
+          config[prop] = conf[prop];
+        }
+        config.callback = newCB;
+        op.op(config);
       }
-      config.callback = newCB;
-      op.op(config);
     }
     executeP.appendChild(executeA);
     
