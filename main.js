@@ -354,18 +354,40 @@ for (var i = 0; i < ops.length; i++) {
       }
     }, true);
     
+    var paramInputs = [],
+        bulkMode = false;
+    
     if (params.length > 0) {
       var reader = new FileReader();
       reader.addEventListener("loadend", function() {
         console.log(reader.result);
       });
-      (function (input) {
+      (function (div, a, input) {
+        div.appendChild(input);
+        a.href = "javascript:void(0)";
+        a.innerText = "cancel";
+        a.onclick = function () {
+          input.value = null;
+          for (var i = 0; i < paramInputs.length; i++) {
+            paramInputs[i].disabled = undefined;
+          }
+          a.style.display = "none";
+          bulkMode = false;
+        }
+        a.style.display = "none";
         input.type = "file";
         input.onchange = function (e) {
+          for (var i = 0; i < paramInputs.length; i++) {
+            paramInputs[i].disabled = "disabled";
+          }
+          a.style.display = "";
           reader.readAsText(input.files[0]);
+          bulkMode = true;
         }
-        innerDiv.appendChild(input);
-      })(document.createElement("input"));
+        innerDiv.appendChild(div, a);
+      })(document.createElement("div"),
+         document.createElement("a"),
+         document.createElement("input"));
     }
     
     for (var i = 0; i < params.length; i += 2) {
@@ -373,6 +395,7 @@ for (var i = 0; i < ops.length; i++) {
         var p = document.createElement("p"),
             b = document.createElement("b"),
             input = document.createElement("input");
+        paramInputs.push(input);
         b.innerText = label + ": ";
         p.appendChild(b);
         input.type = "text";
