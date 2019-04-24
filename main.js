@@ -415,10 +415,6 @@ for (var i = 0; i < ops.length; i++) {
     }
     nameP.appendChild(nameA);
     
-    function execute (inputs) {
-      
-    }
-    
     executeA.href = voidLink;
     executeA.textContent = "Execute";
     executeA.onclick = function () {
@@ -435,11 +431,13 @@ for (var i = 0; i < ops.length; i++) {
           for (var j = 0; j < headers.length; j++) {
             row[headers[j]] = thisLine[j];
           }
-          for (var inputName in inputs) {
-            if (!(inputName in row)) {
-              throw Error("column header " + inputName + " not found in file");
-            }
-            config[inputName] = row[inputName];
+          for (var k = 0; k < params.length; k += 2) {
+            (function (label, name) {
+              if (!(label in row)) {
+                throw Error("column header \"" + label + "\" not found in file");
+              }
+              config[name] = row[name];
+            })(params[k], params[k + 1]);
           }
           var conf = op.makeConfig(config),
               cb = conf.callback,
