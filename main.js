@@ -266,7 +266,7 @@ function prepareDriverRow (headers, line) {
       jt = headers.indexOf("JobType"),
       eid = headers.indexOf("zk_employeeID_p");
   console.log(headers, line);
-  if (line(jt).match(/^(006|007|008|010)/)) {
+  if (line[jt].match(/^(006|007|008|010)/)) {
     return {
       "Driver Name": line[fnp],
       "Driver ID": line[eid]
