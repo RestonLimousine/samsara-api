@@ -153,10 +153,13 @@ function formatCell (value) {
 }
 
 function prepareForTable (arr) {
-  var first = arr[0],
-      config = {headers: [], rows: []};
-  for (var prop in first) {
-    config.headers.push(prop);
+  var config = {headers: [], rows: []};
+  for (var n = 0; n < arr.length; n++) {
+    for (var prop in arr[n]) {
+      if (config.headers.indexOf(prop) === -1) {
+        config.headers.push(prop);
+      }
+    }
   }
   for (var i = 0; i < arr.length; i++) {
     var row = [];
