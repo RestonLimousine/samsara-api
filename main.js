@@ -354,6 +354,11 @@ for (var i = 0; i < ops.length; i++) {
       }
     }, true);
     
+    (function (input) {
+      input.type = "file";
+      innerDiv.appendChild(input);
+    })(document.createElement("input"));
+    
     for (var i = 0; i < params.length; i += 2) {
       (function (label, name) {
         var p = document.createElement("p"),
