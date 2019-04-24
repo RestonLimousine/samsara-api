@@ -455,43 +455,46 @@ for (var i = 0; i < ops.length; i++) {
             out = [];
         lines = lines.slice(1);
         for (var i = 0; i < lines.length; i++) {
-          var thisLine = lines[i].split(/,/);
-          var row = {};
-          if (op.prepareRow) {
-            row = op.prepareRow(headers, thisLine);
-            console.log(row);
-          } else {
-            for (var j = 0; j < headers.length; j++) {
-              row[headers[j]] = thisLine[j];
+          var thisLine = lines[i];
+          if (thisLine.length > 0) {
+            thisLine = lines[i].split(/,/);
+            var row = {};
+            if (op.prepareRow) {
+              row = op.prepareRow(headers, thisLine);
+              console.log(row);
+            } else {
+              for (var j = 0; j < headers.length; j++) {
+                row[headers[j]] = thisLine[j];
+              }
             }
-          }
-          if (row) {
-            for (var k = 0; k < params.length; k += 2) {
-              (function (label, name) {
-                if (!(label in row)) {
-                  clearPre();
-                  pre.innerText = "Error: column header \"" + label + "\" not found in file";
-                  throw "see error";
-                }
-                config[name] = row[label];
-              })(params[k], params[k + 1]);
-            }
-            var conf = op.makeConfig(config),
-                cb = conf.callback,
-                newCB = function (res, rsp) {
-                  if (cb) res = cb(res, rsp);
-                  out.push(res);
-                  if (out.count === lines.count) {
-                    lastResult = thisResult = out;
+            if (row) {
+              for (var k = 0; k < params.length; k += 2) {
+                (function (label, name) {
+                  if (!(label in row)) {
                     clearPre();
-                    pre.innerText = JSON.stringify(out, null, 2);
+                    pre.innerText = "Error: column header \"" + label + "\" not found in file";
+                    throw "see error";
                   }
-                };
-            for (var prop in conf) {
-              config[prop] = conf[prop];
+                  config[name] = row[label];
+                })(params[k], params[k + 1]);
+              }
+              var conf = op.makeConfig(config),
+                  cb = conf.callback,
+                  newCB = function (res, rsp) {
+                    if (cb) res = cb(res, rsp);
+                    out.push(res);
+                    if (out.count === lines.count) {
+                      lastResult = thisResult = out;
+                      clearPre();
+                      pre.innerText = JSON.stringify(out, null, 2);
+                    }
+                  };
+              for (var prop in conf) {
+                config[prop] = conf[prop];
+              }
+              config.callback = newCB;
+              op.op(config);
             }
-            config.callback = newCB;
-            op.op(config);
           }
         }
       } else {
