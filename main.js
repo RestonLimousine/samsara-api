@@ -457,8 +457,8 @@ for (var i = 0; i < ops.length; i++) {
         for (var i = 0; i < lines.length; i++) {
           var thisLine = lines[i].split(/,/);
           var row = {};
-          if (config.prepareRow) {
-            row = config.prepareRow(headers, thisLine);
+          if (op.prepareRow) {
+            row = op.prepareRow(headers, thisLine);
             console.log(row);
           } else {
             for (var j = 0; j < headers.length; j++) {
