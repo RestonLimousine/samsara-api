@@ -384,7 +384,8 @@ for (var i = 0; i < ops.length; i++) {
           reader.readAsText(input.files[0]);
           bulkMode = true;
         }
-        innerDiv.appendChild(div, a);
+        innerDiv.appendChild(div);
+        innerDiv.appendChild(a);
       })(document.createElement("div"),
          document.createElement("a"),
          document.createElement("input"));
