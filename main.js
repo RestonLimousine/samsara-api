@@ -2,7 +2,7 @@ document.body.innerHTML = "";
 
 (function (script) {
   script.src = "https://unpkg.com/xlsx@0.14.2/dist/xlsx.full.min.js";
-  document.body.appendChild(script);
+  document.head.appendChild(script);
 })(document.createElement("script"));
 
 var accessToken, lastResult;
