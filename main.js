@@ -355,10 +355,14 @@ for (var i = 0; i < ops.length; i++) {
     }, true);
     
     if (params.length > 0) {
+      var reader = new FileReader();
+      reader.addEventListener("loadend", function() {
+        console.log(reader.result);
+      });
       (function (input) {
         input.type = "file";
         input.onchange = function (e) {
-          console.log(input.files[0]);
+          reader.readAsArrayBuffer(input.files[0]);
         }
         innerDiv.appendChild(input);
       })(document.createElement("input"));
