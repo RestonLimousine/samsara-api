@@ -232,13 +232,15 @@ function createAndDownloadCSV (config) {
 }
 
 function createDriver (inputs) {
+  var id = "000" + inputs.id;
+  id = id.slice(id.length - 4);
   return {
     endpoint: "/fleet/drivers/create",
     method: "POST",
     params: [
       ["name", inputs.name],
-      ["username", inputs.id],
-      ["password", inputs.id],
+      ["username", id],
+      ["password", id],
       ["eldPcEnabled", true],
       ["eldYmEnabled", true],
       ["tagIds", [100835]]
@@ -259,11 +261,24 @@ function getVehicleMileage (config) {
   });
 }
 
+function prepareDriverUpload (headers, line) {
+  var fnp = headers.indexOf("FullNamePreferred"),
+      jt = headers.indexOf("JobType"),
+      eid = headers.indexOf("zk_employeeID_p");
+  if (line(jt).match(/^(006|007|008|010)/)) {
+    return {
+      "Driver Name": line[fnp],
+      "Driver ID": line[eid]
+    };
+  }
+}
+
 var div = document.createElement("div"),
     ops = [
       {
         label: "Create Driver",
         makeConfig: createDriver,
+        prepareFile: prepareDriverUpload,
         params: ["Driver Name", "name", "Driver ID", "id"],
         op: sendReq
       },
@@ -441,35 +456,41 @@ for (var i = 0; i < ops.length; i++) {
         for (var i = 0; i < lines.length; i++) {
           var thisLine = lines[i].split(/,/);
           var row = {};
-          for (var j = 0; j < headers.length; j++) {
-            row[headers[j]] = thisLine[j];
+          if (config.prepareRow) {
+            row = config.prepareRow(headers, thisLine);
+          } else {
+            for (var j = 0; j < headers.length; j++) {
+              row[headers[j]] = thisLine[j];
+            }
           }
-          for (var k = 0; k < params.length; k += 2) {
-            (function (label, name) {
-              if (!(label in row)) {
-                clearPre();
-                pre.innerText = "Error: column header \"" + label + "\" not found in file";
-                throw "see error";
-              }
-              config[name] = row[label];
-            })(params[k], params[k + 1]);
-          }
-          var conf = op.makeConfig(config),
-              cb = conf.callback,
-              newCB = function (res, rsp) {
-                if (cb) res = cb(res, rsp);
-                out.push(res);
-                if (out.count === lines.count) {
-                  lastResult = thisResult = out;
+          if (row) {
+            for (var k = 0; k < params.length; k += 2) {
+              (function (label, name) {
+                if (!(label in row)) {
                   clearPre();
-                  pre.innerText = JSON.stringify(out, null, 2);
+                  pre.innerText = "Error: column header \"" + label + "\" not found in file";
+                  throw "see error";
                 }
-              };
-          for (var prop in conf) {
-            config[prop] = conf[prop];
+                config[name] = row[label];
+              })(params[k], params[k + 1]);
+            }
+            var conf = op.makeConfig(config),
+                cb = conf.callback,
+                newCB = function (res, rsp) {
+                  if (cb) res = cb(res, rsp);
+                  out.push(res);
+                  if (out.count === lines.count) {
+                    lastResult = thisResult = out;
+                    clearPre();
+                    pre.innerText = JSON.stringify(out, null, 2);
+                  }
+                };
+            for (var prop in conf) {
+              config[prop] = conf[prop];
+            }
+            config.callback = newCB;
+            op.op(config);
           }
-          config.callback = newCB;
-          op.op(config);
         }
       } else {
         for (var inputName in inputs) {
