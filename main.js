@@ -375,6 +375,7 @@ for (var i = 0; i < ops.length; i++) {
           bulkMode = false;
         }
         a.style.display = "none";
+        input.style.display = "inline";
         input.type = "file";
         input.onchange = function (e) {
           for (var i = 0; i < paramInputs.length; i++) {
