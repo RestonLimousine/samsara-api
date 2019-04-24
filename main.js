@@ -432,14 +432,15 @@ for (var i = 0; i < ops.length; i++) {
             row[headers[j]] = thisLine[j];
             console.log(headers[j], row);
           }
-          console.log(row);
           for (var k = 0; k < params.length; k += 2) {
             (function (label, name) {
               if (!(label in row)) {
-                console.log(label, row);
-                clearPre();
-                pre.innerText = "Error: column header \"" + label + "\" not found in file";
-                throw "";
+                label = '"' + label + '"';
+                if (!(label in row)) {
+                  clearPre();
+                  pre.innerText = "Error: column header " + label + " not found in file";
+                  throw "see error";
+                }
               }
               config[name] = row[label];
             })(params[k], params[k + 1]);
