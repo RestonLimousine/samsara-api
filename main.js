@@ -429,9 +429,9 @@ for (var i = 0; i < ops.length; i++) {
           var thisLine = lines[i].split(/,/);
           var row = {};
           for (var j = 0; j < headers.length; j++) {
+            console.log(headers[j]);
             row[headers[j]] = thisLine[j];
           }
-            console.log(params, row);
           for (var k = 0; k < params.length; k += 2) {
             (function (label, name) {
               if (!(label in row)) {
