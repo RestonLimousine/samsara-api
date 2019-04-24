@@ -500,21 +500,3 @@ link.rel = "stylesheet";
 
 document.head.appendChild(link);
 document.body.appendChild(div);
-
-/*
-var getVehicles = function () { };
-
-var getVehicleReport = function () {
-  getVehicles(function (rows) {
-    downloadReport("mileage", ["Name", "Mileage", "Engine Hours", "Vehicles"],
-      rows.map(function (row) {
-        return [
-          row.name,
-          (row.odometerMeters === null ? "" : Math.floor(row.odometerMeters * 0.000621371)),
-          (row.engineHours || "")
-        ];
-      })
-    );
-  });
-};
-*/
