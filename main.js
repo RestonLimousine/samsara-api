@@ -429,18 +429,17 @@ for (var i = 0; i < ops.length; i++) {
           var thisLine = lines[i].split(/,/);
           var row = {};
           for (var j = 0; j < headers.length; j++) {
-            row[headers[j]] = thisLine[j];
+            var header = headers[j].replace(/\W/, '');
+            row[header] = thisLine[j];
           }
           for (var k = 0; k < params.length; k += 2) {
             (function (label, name) {
+              label = label.replace(/\W/, '');
               if (!(label in row)) {
-                label = '"' + label + '"';
-                console.log(label);
-                if (!(label in row)) {
-                  clearPre();
-                  pre.innerText = "Error: column header " + label + " not found in file";
-                  throw "see error";
-                }
+                console.log(label, row);
+                clearPre();
+                pre.innerText = "Error: column header \"" + label + "\" not found in file";
+                throw "see error";
               }
               config[name] = row[label];
             })(params[k], params[k + 1]);
