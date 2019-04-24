@@ -39,21 +39,21 @@ var sendReq = function (config) {
       cb = config.callback,
       params = config.params,
       req = new XMLHttpRequest();
-  req.addEventListener("load", function () {
-    var rsp = this.responseText,
-        res;
-    try {
-      res = JSON.parse(rsp);
-    } catch {
-      res = {message: rsp};
-      if (config.params) {
-        for (var i = 0; i < config.params.length; i++) {
+  (function (params) {
+    req.addEventListener("load", function () {
+      var rsp = this.responseText,
+          res;
+      try {
+        res = JSON.parse(rsp);
+      } catch {
+        res = {message: rsp};
+        for (var i = 0; i < params.length; i++) {
           res[config.params[i][0]] = config.params[i][1];
         }
       }
-    }
-    if (cb) cb(res, rsp);
-  });
+      if (cb) cb(res, rsp);
+    });
+  })(config.params || []);
   params = (params ? "&" + params.map(function (x) { return x.join("="); }).join("&") : "");
   uri = "https://api.samsara.com/v1" + uri + "?access_token=" + accessToken;
   uri = encodeURI(uri + params);
