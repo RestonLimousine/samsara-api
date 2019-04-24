@@ -41,7 +41,12 @@ var sendReq = function (config) {
       req = new XMLHttpRequest();
   req.addEventListener("load", function () {
     var rsp = this.responseText,
-        res = JSON.parse(rsp);
+        res;
+    try {
+      res = JSON.parse(rsp);
+    } catch {
+      res = {error: res};
+    }
     if (cb) cb(res, rsp);
   });
   params = (params ? "&" + params.map(function (x) { return x.join("="); }).join("&") : "");
@@ -421,11 +426,10 @@ for (var i = 0; i < ops.length; i++) {
       pre.innerText = "please wait...";
       op.makeConfig = op.makeConfig || function (x) { return {}; };
       if (uploaded) {
-        var lines = uploaded.split(/(\r\n|\n)/),
+        var lines = uploaded.split(/\r\n|\n/),
             headers = lines[0].split(/,/),
             out = [];
         lines = lines.slice(1);
-        console.log(lines);
         for (var i = 0; i < lines.length; i++) {
           var thisLine = lines[i].split(/,/);
           var row = {};
@@ -435,7 +439,6 @@ for (var i = 0; i < ops.length; i++) {
           for (var k = 0; k < params.length; k += 2) {
             (function (label, name) {
               if (!(label in row)) {
-                console.log(label, row, ('"' + label + '"') in row);
                 clearPre();
                 pre.innerText = "Error: column header \"" + label + "\" not found in file";
                 throw "see error";
