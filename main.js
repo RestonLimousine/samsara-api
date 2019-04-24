@@ -434,7 +434,9 @@ for (var i = 0; i < ops.length; i++) {
           for (var k = 0; k < params.length; k += 2) {
             (function (label, name) {
               if (!(label in row)) {
-                throw Error("column header \"" + label + "\" not found in file");
+                clearPre();
+                pre.innerText = "Error: column header \"" + label + "\" not found in file";
+                throw "";
               }
               config[name] = row[name];
             })(params[k], params[k + 1]);
