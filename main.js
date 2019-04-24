@@ -436,7 +436,7 @@ for (var i = 0; i < ops.length; i++) {
             (function (label, name) {
               label = label.replace(/\W/, '');
               if (!(label in row)) {
-                console.log(label, row);
+                console.log(label, row, ('"' + label + '"') in row);
                 clearPre();
                 pre.innerText = "Error: column header \"" + label + "\" not found in file";
                 throw "see error";
