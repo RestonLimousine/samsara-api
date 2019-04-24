@@ -395,7 +395,6 @@ for (var i = 0; i < ops.length; i++) {
         var p = document.createElement("p"),
             b = document.createElement("b"),
             input = document.createElement("input");
-        paramInputs.push(input);
         b.innerText = label + ": ";
         p.appendChild(b);
         input.type = "text";
