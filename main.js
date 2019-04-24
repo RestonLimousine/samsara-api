@@ -394,6 +394,7 @@ for (var i = 0; i < ops.length; i++) {
       var reader = new FileReader();
       reader.addEventListener("loadend", function() {
         uploaded = reader.result;
+        console.log(XLSX.read(uploaded));
       });
       (function (div, a, input) {
         div.appendChild(input);
