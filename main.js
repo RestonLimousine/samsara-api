@@ -421,7 +421,7 @@ for (var i = 0; i < ops.length; i++) {
       pre.innerText = "please wait...";
       op.makeConfig = op.makeConfig || function (x) { return {}; };
       if (uploaded) {
-        var lines = uploaded.split(/\n/),
+        var lines = uploaded.split(/(\r\n|\n)/),
             headers = lines[0].split(/,/),
             out = [];
         lines = lines.slice(1);
@@ -429,12 +429,10 @@ for (var i = 0; i < ops.length; i++) {
           var thisLine = lines[i].split(/,/);
           var row = {};
           for (var j = 0; j < headers.length; j++) {
-            var header = headers[j].replace(/\W/, '');
-            row[header] = thisLine[j];
+            row[headers[j]] = thisLine[j];
           }
           for (var k = 0; k < params.length; k += 2) {
             (function (label, name) {
-              label = label.replace(/\W/, '');
               if (!(label in row)) {
                 console.log(label, row, ('"' + label + '"') in row);
                 clearPre();
