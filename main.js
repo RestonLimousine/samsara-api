@@ -1,5 +1,10 @@
 document.body.innerHTML = "";
 
+(function (script) {
+  script.src = "https://unpkg.com/xlsx@0.14.2/dist/xlsx.full.min.js";
+  document.head.appendChild(script);
+})(document.createElement("script"));
+
 var accessToken, lastResult;
 
 Array.prototype.sortBy = function (f) {
