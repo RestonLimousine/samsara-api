@@ -267,7 +267,8 @@ function getVehicleMileage (config) {
 }
 
 function prepareDriverRow (row) {
-  if (row["JobType"].match(/^(006|007|008|010)/)) {
+  var jt = row["JobType"] || "";
+  if (jt.match(/^(006|007|008|010)/)) {
     return {
       "Driver Name": row["FullNamePreferred"],
       "Driver ID": row["zk_employeeID_p"]
@@ -454,13 +455,17 @@ for (var i = 0; i < ops.length; i++) {
       pre.innerText = "please wait...";
       op.makeConfig = op.makeConfig || function (x) { return {}; };
       if (uploaded) {
+        var out = [],
+            done = 0;
         for (var i = 0; i < uploaded.length; i++) {
           var row = uploaded[i];
           if (op.prepareRow) {
             row = op.prepareRow(row);
             console.log(row);
           }
-          if (row) {
+          if (!row) {
+            done++;
+          } else {
             for (var k = 0; k < params.length; k += 2) {
               (function (label, name) {
                 if (!(label in row)) {
@@ -476,7 +481,8 @@ for (var i = 0; i < ops.length; i++) {
                 newCB = function (res, rsp) {
                   if (cb) res = cb(res, rsp);
                   out.push(res);
-                  if (out.count === lines.count) {
+                  done++;
+                  if (done === uploaded.length) {
                     lastResult = thisResult = out;
                     clearPre();
                     pre.innerText = JSON.stringify(out, null, 2);
