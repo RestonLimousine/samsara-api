@@ -261,7 +261,7 @@ function getVehicleMileage (config) {
   });
 }
 
-function prepareDriverUpload (headers, line) {
+function prepareDriverRow (headers, line) {
   var fnp = headers.indexOf("FullNamePreferred"),
       jt = headers.indexOf("JobType"),
       eid = headers.indexOf("zk_employeeID_p");
@@ -278,7 +278,7 @@ var div = document.createElement("div"),
       {
         label: "Create Driver",
         makeConfig: createDriver,
-        prepareFile: prepareDriverUpload,
+        prepareRow: prepareDriverRow,
         params: ["Driver Name", "name", "Driver ID", "id"],
         op: sendReq
       },
