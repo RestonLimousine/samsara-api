@@ -45,7 +45,7 @@ var sendReq = function (config) {
     try {
       res = JSON.parse(rsp);
     } catch {
-      res = {error: res};
+      res = {error: rsp};
     }
     if (cb) cb(res, rsp);
   });
