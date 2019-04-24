@@ -364,6 +364,7 @@ for (var i = 0; i < ops.length; i++) {
       });
       (function (div, a, input) {
         div.appendChild(input);
+        div.appendChild(a);
         a.href = "javascript:void(0)";
         a.innerText = "cancel";
         a.onclick = function () {
@@ -386,7 +387,6 @@ for (var i = 0; i < ops.length; i++) {
           bulkMode = true;
         }
         innerDiv.appendChild(div);
-        innerDiv.appendChild(a);
       })(document.createElement("div"),
          document.createElement("a"),
          document.createElement("input"));
