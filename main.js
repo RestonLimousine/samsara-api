@@ -266,15 +266,11 @@ function getVehicleMileage (config) {
   });
 }
 
-function prepareDriverRow (headers, line) {
-  var fnp = headers.indexOf("FullNamePreferred"),
-      jt = headers.indexOf("JobType"),
-      eid = headers.indexOf("zk_employeeID_p");
-  console.log(headers, line);
-  if (line[jt].match(/^(006|007|008|010)/)) {
+function prepareDriverRow (row) {
+  if (line["JobType"].match(/^(006|007|008|010)/)) {
     return {
-      "Driver Name": line[fnp],
-      "Driver ID": line[eid]
+      "Driver Name": line["FullNamePreferred"],
+      "Driver ID": line["zk_employeeID_p"]
     };
   }
 }
@@ -393,8 +389,10 @@ for (var i = 0; i < ops.length; i++) {
     if (params.length > 0) {
       var reader = new FileReader();
       reader.addEventListener("loadend", function() {
-        uploaded = new Uint8Array(reader.result);
-        console.log(XLSX.read(uploaded, {type: "array"}));
+        var result = new Uint8Array(reader.result),
+            book = XLSX.read(result, {type: "array"}),
+            sheet = book.Sheets[book.SheetNames[0]];
+        uploaded = XLSX.utils.sheet_to_json(sheet);
       });
       (function (div, a, input) {
         div.appendChild(input);
@@ -456,51 +454,39 @@ for (var i = 0; i < ops.length; i++) {
       pre.innerText = "please wait...";
       op.makeConfig = op.makeConfig || function (x) { return {}; };
       if (uploaded) {
-        var lines = uploaded.split(/\r\n|\n/),
-            headers = lines[0].split(/,/),
-            out = [];
-        lines = lines.slice(1);
-        for (var i = 0; i < lines.length; i++) {
-          var thisLine = lines[i];
-          if (thisLine.length > 0) {
-            thisLine = lines[i].split(/,/);
-            var row = {};
-            if (op.prepareRow) {
-              row = op.prepareRow(headers, thisLine);
-              console.log(row);
-            } else {
-              for (var j = 0; j < headers.length; j++) {
-                row[headers[j]] = thisLine[j];
-              }
+        for (var i = 0; i < uploaded.length; i++) {
+          var row = uploaded[i];
+          if (op.prepareRow) {
+            row = op.prepareRow(row);
+            console.log(row);
+          }
+          if (row) {
+            for (var k = 0; k < params.length; k += 2) {
+              (function (label, name) {
+                if (!(label in row)) {
+                  clearPre();
+                  pre.innerText = "Error: column header \"" + label + "\" not found in file";
+                  throw "see error";
+                }
+                config[name] = row[label];
+              })(params[k], params[k + 1]);
             }
-            if (row) {
-              for (var k = 0; k < params.length; k += 2) {
-                (function (label, name) {
-                  if (!(label in row)) {
+            var conf = op.makeConfig(config),
+                cb = conf.callback,
+                newCB = function (res, rsp) {
+                  if (cb) res = cb(res, rsp);
+                  out.push(res);
+                  if (out.count === lines.count) {
+                    lastResult = thisResult = out;
                     clearPre();
-                    pre.innerText = "Error: column header \"" + label + "\" not found in file";
-                    throw "see error";
+                    pre.innerText = JSON.stringify(out, null, 2);
                   }
-                  config[name] = row[label];
-                })(params[k], params[k + 1]);
-              }
-              var conf = op.makeConfig(config),
-                  cb = conf.callback,
-                  newCB = function (res, rsp) {
-                    if (cb) res = cb(res, rsp);
-                    out.push(res);
-                    if (out.count === lines.count) {
-                      lastResult = thisResult = out;
-                      clearPre();
-                      pre.innerText = JSON.stringify(out, null, 2);
-                    }
-                  };
-              for (var prop in conf) {
-                config[prop] = conf[prop];
-              }
-              config.callback = newCB;
-              op.op(config);
+                };
+            for (var prop in conf) {
+              config[prop] = conf[prop];
             }
+            config.callback = newCB;
+            op.op(config);
           }
         }
       } else {
