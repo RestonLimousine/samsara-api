@@ -265,6 +265,7 @@ function prepareDriverRow (headers, line) {
   var fnp = headers.indexOf("FullNamePreferred"),
       jt = headers.indexOf("JobType"),
       eid = headers.indexOf("zk_employeeID_p");
+  console.log(headers, line);
   if (line(jt).match(/^(006|007|008|010)/)) {
     return {
       "Driver Name": line[fnp],
@@ -458,6 +459,7 @@ for (var i = 0; i < ops.length; i++) {
           var row = {};
           if (config.prepareRow) {
             row = config.prepareRow(headers, thisLine);
+            console.log(row);
           } else {
             for (var j = 0; j < headers.length; j++) {
               row[headers[j]] = thisLine[j];
