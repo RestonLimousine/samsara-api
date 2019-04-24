@@ -362,7 +362,7 @@ for (var i = 0; i < ops.length; i++) {
       (function (input) {
         input.type = "file";
         input.onchange = function (e) {
-          reader.readAsArrayBuffer(input.files[0]);
+          reader.readAsText(input.files[0]);
         }
         innerDiv.appendChild(input);
       })(document.createElement("input"));
