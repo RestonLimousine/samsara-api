@@ -424,7 +424,6 @@ for (var i = 0; i < ops.length; i++) {
         var lines = uploaded.split(/\n/),
             headers = lines[0].split(/,/),
             out = [];
-        console.log(lines[0], headers);
         lines = lines.slice(1);
         for (var i = 0; i < lines.length; i++) {
           var thisLine = lines[i].split(/,/);
@@ -432,6 +431,7 @@ for (var i = 0; i < ops.length; i++) {
           for (var j = 0; j < headers.length; j++) {
             row[headers[j]] = thisLine[j];
           }
+            console.log(params, row);
           for (var k = 0; k < params.length; k += 2) {
             (function (label, name) {
               if (!(label in row)) {
@@ -439,7 +439,7 @@ for (var i = 0; i < ops.length; i++) {
                 pre.innerText = "Error: column header \"" + label + "\" not found in file";
                 throw "";
               }
-              config[name] = row[name];
+              config[name] = row[label];
             })(params[k], params[k + 1]);
           }
           var conf = op.makeConfig(config),
