@@ -433,6 +433,7 @@ for (var i = 0; i < ops.length; i++) {
           }
           for (var k = 0; k < params.length; k += 2) {
             (function (label, name) {
+              console.log(label, row);
               if (!(label in row)) {
                 clearPre();
                 pre.innerText = "Error: column header \"" + label + "\" not found in file";
