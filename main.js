@@ -430,6 +430,7 @@ for (var i = 0; i < ops.length; i++) {
           var row = {};
           for (var j = 0; j < headers.length; j++) {
             row[headers[j]] = thisLine[j];
+            console.log(headers[j], row);
           }
           console.log(row);
           for (var k = 0; k < params.length; k += 2) {
