@@ -393,8 +393,8 @@ for (var i = 0; i < ops.length; i++) {
     if (params.length > 0) {
       var reader = new FileReader();
       reader.addEventListener("loadend", function() {
-        uploaded = reader.result;
-        console.log(XLSX.read(uploaded));
+        uploaded = new Uint8Array(reader.result);
+        console.log(XLSX.read(uploaded, {type: "array"}));
       });
       (function (div, a, input) {
         div.appendChild(input);
@@ -417,7 +417,7 @@ for (var i = 0; i < ops.length; i++) {
             inputs[i].disabled = "disabled";
           }
           a.style.display = "";
-          reader.readAsText(input.files[0]);
+          reader.readAsArrayBuffer(input.files[0]);
         }
         innerDiv.appendChild(div);
       })(document.createElement("div"),
