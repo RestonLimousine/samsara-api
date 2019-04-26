@@ -301,7 +301,6 @@ var div = document.createElement("div"),
       },
       {
         label: "HOS Authentication Logs",
-        makeConfig: getHOSAuthLogsConfig,
         op: getHOSAuthLogs,
         params: ["Days Ago", "days_ago"]
       },
