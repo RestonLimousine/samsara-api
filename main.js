@@ -77,7 +77,8 @@ function sendRequest (inputs) {
 
 var getHOSAuthLogs = function (config) {
   var cb = config.callback,
-      daysAgo = 24*60*60*1000*parseInt(config.days_ago),
+      day = 24*60*60*1000,
+      daysAgo = day * parseInt(config.days_ago),
       out = [];
   sendReq({
     endpoint: "/fleet/drivers",
@@ -95,7 +96,7 @@ var getHOSAuthLogs = function (config) {
             callback: function (y) {
               var logs = y.authenticationLogs || [];
               out = out.concat(logs.filter(function (log) {
-                return true; // log.actionType === "signin";
+                return log.happenedAtMs % day > 0;
               }).map(function (log) {
                 log.time = new Date(log.happenedAtMs);
                 log.driver = driver.name;
