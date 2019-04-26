@@ -462,7 +462,7 @@ for (var i = 0; i < ops.length; i++) {
     executeA.textContent = "Execute";
     executeA.onclick = function () {
       pre.innerText = "please wait...";
-      op.makeConfig = op.makeConfig || function (x) { return {}; };
+      op.makeConfig = op.makeConfig || function (x) { return x; };
       if (uploaded) {
         var out = [],
             done = 0;
