@@ -77,7 +77,15 @@ function sendRequest (inputs) {
 
 var getHOSAuthLogs = function (config) {
   var cb = config.callback,
+      daysAgo = 0,
       out = [];
+  for (var i = 0; i < config.params.length; i++) {
+    var param = config.params[i];
+    if (param[0] ==== "days_ago") {
+      var days = parseInt(param[1]);
+      startMs = 24*60*60*1000*days;
+    }
+  }
   sendReq({
     endpoint: "/fleet/drivers",
     method: "GET",
@@ -108,7 +116,7 @@ var getHOSAuthLogs = function (config) {
             },
             params: [
               ["driverId", driver.id],
-              ["startMs", t-(24*60*60*1000*3)],
+              ["startMs", t-daysAgo],
               ["endMs", t]
             ]
           });
@@ -293,7 +301,9 @@ var div = document.createElement("div"),
       },
       {
         label: "HOS Authentication Logs",
-        op: getHOSAuthLogs
+        makeConfig: getHOSAuthLogsConfig,
+        op: getHOSAuthLogs,
+        params: ["Days Ago", "days_ago"]
       },
       {
         label: "Vehicle Mileage",
