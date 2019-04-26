@@ -95,13 +95,13 @@ var getHOSAuthLogs = function (config) {
             method: "GET",
             callback: function (y) {
               var logs = y.authenticationLogs || [];
-              out = out.concat.map(function (log) {
+              out = out.concat(logs.map(function (log) {
                 log.time = new Date(log.happenedAtMs);
                 log.driver = driver.name;
                 return log;
               }).filter(function (log) {
                 return log.time.getHours() > 0 || log.time.getMinutes() > 0;
-              });
+              }));
               done++;
               if (done === drivers.length) {
                 out.sortByKey("happenedAtMs");
