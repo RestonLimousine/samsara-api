@@ -79,7 +79,7 @@ var getHOSAuthLogs = function (config) {
   var cb = config.callback,
       day = 24*60*60*1000,
       daysAgo = day * parseInt(config.days_ago),
-      out = [];
+      out = {drivers: [], logs: []};
   sendReq({
     endpoint: "/fleet/drivers",
     method: "GET",
@@ -95,16 +95,24 @@ var getHOSAuthLogs = function (config) {
             method: "GET",
             callback: function (y) {
               var logs = y.authenticationLogs || [];
-              out = out.concat(logs.map(function (log) {
+              logs = logs.map(function (log) {
                 log.time = new Date(log.happenedAtMs);
                 log.driver = driver.name;
                 return log;
               }).filter(function (log) {
                 return log.time.getHours() > 0 || log.time.getMinutes() > 0;
-              }));
+              });
+              if (logs.length > 0) {
+                driver.has_logs = true;
+                out.logs = out.logs.concat(logs);
+              } else {
+                driver.has_logs = false;
+              }
+              out.drivers.push(driver);
               done++;
               if (done === drivers.length) {
-                out.sortByKey("happenedAtMs");
+                out.drivers.sortByKey("name");
+                out.logs.sortByKey("happenedAtMs");
                 cb(out);
               }
             },
