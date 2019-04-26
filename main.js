@@ -77,15 +77,8 @@ function sendRequest (inputs) {
 
 var getHOSAuthLogs = function (config) {
   var cb = config.callback,
-      daysAgo = 0,
+      daysAgo = 24*60*60*1000*parseInt(config.days_ago),
       out = [];
-  for (var i = 0; i < config.params.length; i++) {
-    var param = config.params[i];
-    if (param[0] === "days_ago") {
-      var days = parseInt(param[1]);
-      startMs = 24*60*60*1000*days;
-    }
-  }
   sendReq({
     endpoint: "/fleet/drivers",
     method: "GET",
@@ -462,7 +455,7 @@ for (var i = 0; i < ops.length; i++) {
     executeA.textContent = "Execute";
     executeA.onclick = function () {
       pre.innerText = "please wait...";
-      op.makeConfig = op.makeConfig || function (x) { return x; };
+      op.makeConfig = op.makeConfig || function (x) { return {}; };
       if (uploaded) {
         var out = [],
             done = 0;
