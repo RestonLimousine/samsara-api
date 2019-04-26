@@ -81,7 +81,7 @@ var getHOSAuthLogs = function (config) {
       out = [];
   for (var i = 0; i < config.params.length; i++) {
     var param = config.params[i];
-    if (param[0] ==== "days_ago") {
+    if (param[0] === "days_ago") {
       var days = parseInt(param[1]);
       startMs = 24*60*60*1000*days;
     }
