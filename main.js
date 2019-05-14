@@ -280,7 +280,7 @@ function prepareDriverRow (row) {
   var jt = row["JobType"] || "";
   if (jt.match(/^(006|007|008|010)/)) {
     return {
-      "Driver Name": row["FullNamePreferred_c"],
+      "Driver Name": row["NameFullPreferred_c"],
       "Driver ID": row["zk_employeeID_p"]
     };
   }
