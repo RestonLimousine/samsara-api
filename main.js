@@ -129,10 +129,10 @@ function getIdlingReport (config) {
                     var millis = stats[j].timeMs,
                         dt = new Date(millis);
                     out.push({
+                      vehicle: v.name,
                       date: dt.toLocaleDateString(),
                       time: dt.toLocaleTimeString(),
                       status: stats[j].value,
-                      vehicle: v.name,
                       duration_minutes: prev ? Math.floor((millis - prev.timeMs) / 60000) : null
                     });
                     prev = stats[j];
@@ -387,7 +387,11 @@ var div = document.createElement("div"),
       },
       {
         label: "Idling Report",
-        params: ["Vehicles (comma separated for multiple)", "vehicles", "Max Time", "max", "Date Range (yyyymmdd-yyyymmdd)", "dates"],
+        params: [
+          "Vehicles (comma separated for multiple)", "vehicles",
+          "Max Time", "max",
+          "Date Range (yyyymmdd or yyyymmdd-yyyymmdd)", "dates"
+        ],
         op: getIdlingReport
       }
     ],
