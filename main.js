@@ -1,3 +1,5 @@
+// todo: help text for each input field
+
 document.body.innerHTML = "";
 
 (function (script) {
@@ -89,6 +91,7 @@ function getIdlingReport (config) {
       dates = config.dates.split("-"),
       start = parseDate(dates[0]).getTime(),
       end = parseDate(dates[1] || dates[0]).getTime() + day,
+      maxIdle = parseInt(config.max),
       vehicles = config.vehicles.split(","),
       out = [];
   sendReq({
@@ -127,13 +130,16 @@ function getIdlingReport (config) {
                       prev;
                   for (var j = 0; j < stats.length; j++) {
                     var millis = stats[j].timeMs,
-                        dt = new Date(millis);
+                        dt = new Date(millis),
+                        duration = prev ? Math.floor((millis - prev.timeMs) / 60000) : null,
+                        error = duration > maxIdle ? "excessive idling" : null;
                     out.push({
+                      __worksheet__: v.name,
                       vehicle: v.name,
                       date: dt.toLocaleDateString(),
                       time: dt.toLocaleTimeString(),
                       status: stats[j].value,
-                      duration_minutes: prev ? Math.floor((millis - prev.timeMs) / 60000) : null
+                      duration_minutes: duration
                     });
                     prev = stats[j];
                   }
@@ -220,7 +226,23 @@ function downloadContent (config) {
 
 var downloadCSV = function (config) {
   var headers = config.content.headers,
-      rows = config.content.rows;
+      rows = config.content.rows,
+      wb = XLSX.utils.book_new(),
+      sheets = rows.reduce(function (p, c) {
+        var currSheet = p[p.length - 1];
+        if (!currSheet || c.sheet !== p.sheet) {
+          currSheet = [headers];
+          currSheet.name = c.sheet;
+          p.push(currSheet);
+        }
+        currSheet.push(c);
+      }, []);
+  sheets.reduce(function (p, c) {
+    var ws = XLSX.utils.aoa_to_sheet(c);
+    XLSX.utils.book_append_sheet(wb, ws, c.name);
+  }, null);
+  XLSX.writeFile(wb, "out.xlsx");
+  /*
   rows = rows.map(function (row) {
     return row.map(function (x) {
       x = x.replace(/"/g, '""');
@@ -231,6 +253,7 @@ var downloadCSV = function (config) {
   config.content = headers + "\n" + rows;
   config.ext = "csv";
   downloadContent(config);
+  */
 }
 
 function formatCell (value) {
@@ -251,13 +274,14 @@ function prepareForTable (arr) {
   var config = {headers: [], rows: []};
   for (var n = 0; n < arr.length; n++) {
     for (var prop in arr[n]) {
-      if (config.headers.indexOf(prop) === -1) {
+      if (config.headers.indexOf(prop) === -1 && prop !== "__worksheet__") {
         config.headers.push(prop);
       }
     }
   }
   for (var i = 0; i < arr.length; i++) {
     var row = [];
+    row.sheet = arr[i].__worksheet__;
     for (var j = 0; j < config.headers.length; j++) {
       var header = config.headers[j],
           cell = arr[i][header];
@@ -389,7 +413,7 @@ var div = document.createElement("div"),
         label: "Idling Report",
         params: [
           "Vehicles (comma separated for multiple)", "vehicles",
-          "Max Time", "max",
+          "Max Idling (optional)", "max",
           "Date Range (yyyymmdd or yyyymmdd-yyyymmdd)", "dates"
         ],
         op: getIdlingReport
