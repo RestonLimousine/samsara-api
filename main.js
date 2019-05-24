@@ -227,7 +227,7 @@ function downloadContent (config) {
   a.remove();
 }
 
-var downloadCSV = function (config) {
+var downloadXLSX = function (config) {
   var headers = config.content.headers,
       rows = config.content.rows,
       wb = XLSX.utils.book_new(),
@@ -346,9 +346,9 @@ function makeTable (res, input) {
   }
 }
 
-function createAndDownloadCSV (config) {
+function createAndDownloadXLSX (config) {
   config.content = prepareForTable(config.content);
-  downloadCSV(config);
+  downloadXLSX(config);
 }
 
 function createDriver (inputs) {
@@ -503,10 +503,10 @@ for (var i = 0; i < ops.length; i++) {
       });
     });
     
-    aInP("download CSV", function (input) {
+    aInP("download XLSX", function (input) {
       var arr = getArray(thisResult, input);
       if (arr) {
-        createAndDownloadCSV({filename: fileName, content: arr});
+        createAndDownloadXLSX({filename: fileName, content: arr});
       }
     }, true);
     
