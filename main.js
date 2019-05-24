@@ -126,12 +126,14 @@ function getIdlingReport (config) {
                   var stats = rspStats[i].engineState,
                       prev;
                   for (var j = 0; j < stats.length; j++) {
-                    var time = stats[j].timeMs;
+                    var millis = stats[j].timeMs,
+                        dt = new Date(millis);
                     out.push({
-                      date: new Date(time).toLocaleString(),
+                      date: dt.toLocaleDateString(),
+                      time: dt.toLocaleTimeString(),
                       status: stats[j].value,
                       vehicle: v.name,
-                      diff: prev ? (time - prev.timeMs) / 60000 : null
+                      duration_minutes: prev ? Math.floor((millis - prev.timeMs) / 60000) : null
                     });
                     prev = stats[j];
                   }
