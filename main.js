@@ -131,20 +131,20 @@ function getIdlingReport (config) {
                   for (var j = 0; j < stats.length; j++) {
                     var millis = stats[j].timeMs,
                         dt = new Date(millis),
-                        duration = prev ? Math.floor((millis - prev.timeMs) / 60000) : null,
+                        duration = prev ? Math.floor((millis - prev.__meta__.millis) / 60000) : null,
                         status = stats[j].value,
                         isError = status === "Idle" && duration > maxIdle,
                         error = isError ? "excessive idling" : null;
-                    out.push({
-                      __meta__: {worksheet: v.name},
+                    prev.duration_minutes = duration;
+                    prev.error = error;
+                    prev = {
+                      __meta__: {worksheet: v.name, millis: millis},
                       vehicle: v.name,
                       date: dt.toLocaleDateString(),
                       time: dt.toLocaleTimeString(),
-                      status: status,
-                      duration_minutes: duration,
-                      error: error
+                      status: status
                     });
-                    prev = stats[j];
+                    out.push(prev);
                   }
                   break;
                 }
