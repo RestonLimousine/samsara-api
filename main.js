@@ -130,7 +130,7 @@ function getIdlingReport (config) {
                       date: time.toLocalString(),
                       status: stats[j].value,
                       vehicle: v.name,
-                      diff: prev ? (time - prev.timeMs) / 60000
+                      diff: prev ? (time - prev.timeMs) / 60000 : null
                     });
                     prev = stats[j];
                   }
