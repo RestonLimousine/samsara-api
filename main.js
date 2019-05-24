@@ -122,12 +122,18 @@ function getIdlingReport (config) {
             if (v.id) {
               for (var i = 0; i < rspStats.length; i++) {
                 if (rspStats[i].vehicleId === v.id) {
-                  var stats = rspStats[i].engineState;
+                  var stats = rspStats[i].engineState,
+                      prev;
                   for (var j = 0; j < stats.length; j++) {
-                    stats[j].vehicle = v.name;
-                    out.push(stats[j]);
+                    var time = stats[j].timeMs;
+                    out.push({
+                      date: time.toLocalString(),
+                      status: stats[j].value,
+                      vehicle: v.name,
+                      diff: prev ? (time - prev.timeMs) / 60000
+                    });
+                    prev = stats[j];
                   }
-                  break;
                 }
               }
               next();
