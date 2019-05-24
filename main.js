@@ -27,14 +27,14 @@ function dateStr (d) {
   });
 }
 
-function mdy (d, delim) {
+function yyyymmdd (d, delim) {
   var opts = {
         month: "2-digit",
         day: "2-digit",
         year: "numeric"
       },
-      s = d.toLocaleDateString("en", opts).split(/\D/)
-  s = s.slice(0, 2).concat(s.slice(-1));
+      s = d.toLocaleDateString("en", opts).split(/\D/);
+  s = s.slice(-1).concat(s.slice(0, 2));
   return s.join(delim || "");
 }
 
@@ -209,7 +209,7 @@ function downloadContent (config) {
       file = config.filename,
       content = config.content;
   file = "samsara_" + file + "_";
-  file = file + mdy(new Date());
+  file = file + yyyymmdd(new Date());
   file = file + "." + ext;
   a.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
   a.setAttribute('download', file);
