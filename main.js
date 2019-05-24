@@ -134,7 +134,7 @@ function getIdlingReport (config) {
                         duration = prev ? Math.floor((millis - prev.timeMs) / 60000) : null,
                         error = duration > maxIdle ? "excessive idling" : null;
                     out.push({
-                      __worksheet__: v.name,
+                      __meta__: {worksheet: v.name},
                       vehicle: v.name,
                       date: dt.toLocaleDateString(),
                       time: dt.toLocaleTimeString(),
@@ -228,12 +228,13 @@ var downloadCSV = function (config) {
   var headers = config.content.headers,
       rows = config.content.rows,
       wb = XLSX.utils.book_new(),
+      wbarr = [],
       sheets = rows.reduce(function (p, c) {
-        var currSheet = p[p.length - 1];
-        if (!currSheet || c.sheet !== p.sheet) {
+        var currSheet = wbarr[wbarr.length - 1];
+        if (!currSheet || c.meta.worksheet !== wbarr.sheet) {
           currSheet = [headers];
-          currSheet.name = c.sheet;
-          p.push(currSheet);
+          currSheet.name = c.meta.worksheet;
+          wbarr.push(currSheet);
         }
         currSheet.push(c);
       }, []);
@@ -274,14 +275,14 @@ function prepareForTable (arr) {
   var config = {headers: [], rows: []};
   for (var n = 0; n < arr.length; n++) {
     for (var prop in arr[n]) {
-      if (config.headers.indexOf(prop) === -1 && prop !== "__worksheet__") {
+      if (config.headers.indexOf(prop) === -1 && prop !== "__meta__") {
         config.headers.push(prop);
       }
     }
   }
   for (var i = 0; i < arr.length; i++) {
     var row = [];
-    row.sheet = arr[i].__worksheet__;
+    row.meta = arr[i].__meta__;
     for (var j = 0; j < config.headers.length; j++) {
       var header = config.headers[j],
           cell = arr[i][header];
