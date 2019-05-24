@@ -116,7 +116,7 @@ function getIdlingReport (config) {
         }
         if (v.id) {
           sendReq({
-            endPoint: "/fleet/vehicles/stats",
+            endpoint: "/fleet/vehicles/stats",
             params: [["startMS", start], ["endMs", end]],
             callback: function (rsp) {
               var vhs = rsp.vehicleStats;
