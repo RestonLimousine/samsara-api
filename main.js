@@ -228,17 +228,17 @@ var downloadCSV = function (config) {
   var headers = config.content.headers,
       rows = config.content.rows,
       wb = XLSX.utils.book_new(),
-      wbarr = [],
-      sheets = rows.reduce(function (p, c) {
-        var currSheet = wbarr[wbarr.length - 1];
-        if (!currSheet || c.meta.worksheet !== wbarr.sheet) {
-          currSheet = [headers];
-          currSheet.name = c.meta.worksheet;
-          wbarr.push(currSheet);
-        }
-        currSheet.push(c);
-      }, []);
-  sheets.reduce(function (p, c) {
+      wbarr = [];
+  rows.reduce(function (p, c) {
+    var currSheet = wbarr[wbarr.length - 1];
+    if (!currSheet || c.meta.worksheet !== wbarr.sheet) {
+      currSheet = [headers];
+      currSheet.name = c.meta.worksheet;
+      wbarr.push(currSheet);
+    }
+    currSheet.push(c);
+  }, []);
+  wbarr.reduce(function (p, c) {
     var ws = XLSX.utils.aoa_to_sheet(c);
     XLSX.utils.book_append_sheet(wb, ws, c.name);
   }, null);
@@ -275,7 +275,7 @@ function prepareForTable (arr) {
   var config = {headers: [], rows: []};
   for (var n = 0; n < arr.length; n++) {
     for (var prop in arr[n]) {
-      if (config.headers.indexOf(prop) === -1 && prop !== "__meta__") {
+      if (config.headers.indexOf(prop) === -1 && (prop !== "__meta__")) {
         config.headers.push(prop);
       }
     }
