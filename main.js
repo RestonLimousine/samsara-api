@@ -95,34 +95,34 @@ function getIdlingReport (config) {
     endpoint: "/fleet/list",
     method: "GET",
     callback: function (rsp) {
-      (function loadVehicle (vs) {
-        var vName = vs[0].toLowerCase().trim(),
-            v = {name: vName},
-            next = function () {
-              var _vs = vs.slice(1);
-              if (_vs.length > 0) {
-                loadVehicle(_vs);
-              } else {
-                cb(out);
-              } 
-            };
-        console.log(rsp);
-        for (var i = 0; i < rsp.vehicles.length; i++) {
-          var _v = rsp.vehicles[i];
-          if (_v.name.toLowerCase().trim() === vName) {
-            v = _v;
-            break;
-          }
-        }
-        if (v.id) {
-          sendReq({
-            endpoint: "/fleet/vehicles/stats",
-            params: [["startMS", start], ["endMs", end]],
-            callback: function (rsp) {
-              var vhs = rsp.vehicleStats;
-              for (var i = 0; i < vhs.length; i++) {
-                if (vhs[i].vehicleId === v.id) {
-                  var stats = vhs[i].engineState;
+      var rspVeh = rsp.vehicles;
+      sendReq({
+        endpoint: "/fleet/vehicles/stats",
+        params: [["startMS", start], ["endMs", end]],
+        callback: function (rsp) {
+          var rspStats = rsp.vehicleStats;
+          (function loadVehicle (vs) {
+            var vName = vs[0].toLowerCase().trim(),
+                v = {name: vName},
+                next = function () {
+                  var _vs = vs.slice(1);
+                  if (_vs.length > 0) {
+                    loadVehicle(_vs);
+                  } else {
+                    cb(out);
+                  } 
+                };
+            for (var i = 0; i < rspVeh.length; i++) {
+              var _v = rspVeh[i];
+              if (_v.name.toLowerCase().trim() === vName) {
+                v = _v;
+                break;
+              }
+            }
+            if (v.id) {
+              for (var i = 0; i < rspStats.length; i++) {
+                if (rspStats[i].vehicleId === v.id) {
+                  var stats = rspStats[i].engineState;
                   for (var j = 0; j < stats.length; j++) {
                     stats[j].vehicle = v.name;
                     out.push(stats[j]);
@@ -130,12 +130,13 @@ function getIdlingReport (config) {
                   break;
                 }
               }
+              next();
+            } else {
+              next();
             }
-          });
-        } else {
-          next();
+          })(vehicles);
         }
-      })(vehicles);
+      });
     }
   });
 }
