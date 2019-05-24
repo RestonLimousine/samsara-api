@@ -40,7 +40,7 @@ function mdy (d, delim) {
 
 var sendReq = function (config) {
   var uri = config.endpoint,
-      mtd = config.method,
+      mtd = config.method || "GET",
       cb = config.callback,
       params = config.params,
       req = new XMLHttpRequest();
