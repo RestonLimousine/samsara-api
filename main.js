@@ -88,7 +88,7 @@ function getIdlingReport (config) {
   var cb = config.callback,
       dates = config.dates.split("-"),
       start = parseDate(dates[0]).getTime(),
-      end = parseDate(dates[1] || dates[0]).getTime(),
+      end = parseDate(dates[1] || dates[0]).getTime() + day,
       vehicles = config.vehicles.split(","),
       out = [];
   sendReq({
