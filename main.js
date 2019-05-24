@@ -106,7 +106,7 @@ function getIdlingReport (config) {
                 cb(out);
               } 
             };
-        vs = vs.slice(1);
+        console.log(rsp);
         for (var i = 0; i < rsp.vehicles.length; i++) {
           var _v = rsp.vehicles[i];
           if (_v.name.toLowerCase().trim() === vName) {
