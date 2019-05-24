@@ -139,7 +139,8 @@ function getIdlingReport (config) {
                       date: dt.toLocaleDateString(),
                       time: dt.toLocaleTimeString(),
                       status: stats[j].value,
-                      duration_minutes: duration
+                      duration_minutes: duration,
+                      error: error
                     });
                     prev = stats[j];
                   }
@@ -230,10 +231,11 @@ var downloadCSV = function (config) {
       wb = XLSX.utils.book_new(),
       wbarr = [];
   rows.reduce(function (p, c) {
-    var currSheet = wbarr[wbarr.length - 1];
-    if (!currSheet || c.meta.worksheet !== wbarr.sheet) {
+    var currSheet = wbarr[wbarr.length - 1],
+        destSheet = (c.meta || {}).worksheet;
+    if (!currSheet || destSheet !== currSheet.name) {
       currSheet = [headers];
-      currSheet.name = c.meta.worksheet;
+      currSheet.name = destSheet;
       wbarr.push(currSheet);
     }
     currSheet.push(c);
