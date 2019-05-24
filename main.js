@@ -143,7 +143,7 @@ function getIdlingReport (config) {
                       date: dt.toLocaleDateString(),
                       time: dt.toLocaleTimeString(),
                       status: status
-                    });
+                    };
                     out.push(prev);
                   }
                   break;
