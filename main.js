@@ -127,7 +127,7 @@ function getIdlingReport (config) {
                   for (var j = 0; j < stats.length; j++) {
                     var time = stats[j].timeMs;
                     out.push({
-                      date: time.toLocalString(),
+                      date: time.toLocaleString(),
                       status: stats[j].value,
                       vehicle: v.name,
                       diff: prev ? (time - prev.timeMs) / 60000 : null
