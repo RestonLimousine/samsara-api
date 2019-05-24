@@ -132,13 +132,15 @@ function getIdlingReport (config) {
                     var millis = stats[j].timeMs,
                         dt = new Date(millis),
                         duration = prev ? Math.floor((millis - prev.timeMs) / 60000) : null,
-                        error = duration > maxIdle ? "excessive idling" : null;
+                        status = stats[j].value,
+                        isError = status === "Idle" && duration > maxIdle,
+                        error = isError ? "excessive idling" : null;
                     out.push({
                       __meta__: {worksheet: v.name},
                       vehicle: v.name,
                       date: dt.toLocaleDateString(),
                       time: dt.toLocaleTimeString(),
-                      status: stats[j].value,
+                      status: status,
                       duration_minutes: duration,
                       error: error
                     });
@@ -244,7 +246,8 @@ var downloadCSV = function (config) {
     var ws = XLSX.utils.aoa_to_sheet(c);
     XLSX.utils.book_append_sheet(wb, ws, c.name);
   }, null);
-  XLSX.writeFile(wb, "out.xlsx");
+  var filename = "samsara_" + config.filename + "_" + yyyymmdd(new Date()) + ".xlsx";
+  XLSX.writeFile(wb, filename);
   /*
   rows = rows.map(function (row) {
     return row.map(function (x) {
