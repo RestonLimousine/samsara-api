@@ -92,7 +92,7 @@ function getIdlingReport (config) {
       vehicles = config.vehicles.split(","),
       out = [];
   sendReq({
-    endPoint: "/fleet/list",
+    endpoint: "/fleet/list",
     method: "GET",
     callback: function (rsp) {
       (function loadVehicle (vs) {
