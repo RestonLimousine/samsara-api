@@ -75,9 +75,73 @@ function sendRequest (inputs) {
   };
 }
 
+var day = 24*60*60*1000;
+
+function parseDate (date) {
+  var year = parseInt(date.slice(0,4)),
+      month = parseInt(date.slice(4,6)),
+      day = parseInt(date.slice(6));
+  return new Date(year, month - 1, day);
+}
+
+function getIdlingReport (config) {
+  var cb = config.callback,
+      dates = config.dates.split("-"),
+      start = parseDate(dates[0]).getTime(),
+      end = parseDate(dates[1] || dates[0]).getTime(),
+      vehicles = config.vehicles.split(","),
+      out = [];
+  sendReq({
+    endPoint: "/fleet/list",
+    method: "GET",
+    callback: function (rsp) {
+      (function loadVehicle (vs) {
+        var vName = vs[0].toLowerCase().trim(),
+            v = {name: vName},
+            next = function () {
+              var _vs = vs.slice(1);
+              if (_vs.length > 0) {
+                loadVehicle(_vs);
+              } else {
+                cb(out);
+              } 
+            };
+        vs = vs.slice(1);
+        for (var i = 0; i < rsp.vehicles.length; i++) {
+          var _v = rsp.vehicles[i];
+          if (_v.name.toLowerCase().trim() === vName) {
+            v = _v;
+            break;
+          }
+        }
+        if (v.id) {
+          sendReq({
+            endPoint: "/fleet/vehicles/stats",
+            params: [["startMS", start], ["endMs", end]],
+            callback: function (rsp) {
+              var vhs = rsp.vehicleStats;
+              for (var i = 0; i < vhs.length; i++) {
+                if (vhs[i].vehicleId === v.id) {
+                  var stats = vhs[i].engineState;
+                  for (var j = 0; j < stats.length; j++) {
+                    stats[j].vehicle = v.name;
+                    out.push(stats[j]);
+                  }
+                  break;
+                }
+              }
+            }
+          });
+        } else {
+          next();
+        }
+      })(vehicles);
+    }
+  });
+}
+
 var getHOSAuthLogs = function (config) {
   var cb = config.callback,
-      day = 24*60*60*1000,
       daysAgo = day * parseInt(config.days_ago),
       out = {drivers: [], logs: []};
   sendReq({
@@ -309,6 +373,11 @@ var div = document.createElement("div"),
       {
         label: "Vehicle Mileage",
         op: getVehicleMileage
+      },
+      {
+        label: "Idling Report",
+        params: ["Vehicles (comma separated for multiple)", "vehicles", "Max Time", "max", "Date Range (yyyymmdd-yyyymmdd)", "dates"],
+        op: getIdlingReport
       }
     ],
     showingDiv,
