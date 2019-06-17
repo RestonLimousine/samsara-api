@@ -375,6 +375,8 @@ function getVehicleMileage (config) {
     callback: function (rsp) {
       config.callback(rsp.vehicles.map(function (veh) {
         veh.miles = (veh.odometerMeters === null ? "" : Math.floor(veh.odometerMeters * 0.000621371));
+        delete veh.odometerMeters;
+        veh.date = (new Date()).toLocaleDateString("en-US", {month:"2-digit", day:"2-digit", year:"numeric"});
         return veh;
       }));
     }
