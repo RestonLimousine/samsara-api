@@ -590,7 +590,6 @@ for (var i = 0; i < ops.length; i++) {
           var row = uploaded[i];
           if (op.prepareRow) {
             row = op.prepareRow(row);
-            console.log(row);
           }
           if (!row) {
             done++;
