@@ -3,7 +3,7 @@
 
 (el/set-props el/body {"innerHTML" "Hello World!"})
 
-(append-child el/head
+(el/append-child el/head
   ["script" {"src" "https://unpkg.com/xlsx@0.14.2/dist/xlsx.full.min.js"}])
 
 (defn access-token
