@@ -9,8 +9,8 @@
 
 (defn access-token
   []
-  (aget js "accessToken"))
+  (aget js/window "accessToken"))
 
 (defn last-result
   []
-  (aget js "lastResult"))
+  (aget js/window "lastResult"))
