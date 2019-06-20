@@ -13,3 +13,8 @@
 (defn last-result
   []
   (aget js/window "lastResult"))
+
+(defn send-req
+  [config]
+  (let [uri (:endpoint config)]
+    ))
