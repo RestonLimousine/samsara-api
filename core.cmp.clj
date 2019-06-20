@@ -6,3 +6,11 @@
 (.appendChild el/head
   (el/create-element
     ["script" {:src "https://unpkg.com/xlsx@0.14.2/dist/xlsx.full.min.js"}]))
+
+(defn access-token
+  []
+  (aget js "accessToken"))
+
+(defn last-result
+  []
+  (aget js "lastResult"))
