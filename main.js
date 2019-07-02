@@ -179,32 +179,38 @@ var getHOSLogs = function (config) {
           method: "GET",
           params: [["driverId", driver.id], ["startMs", start], ["endMs", end]],
           callback: function (rsp) {
-            (function getNextLog (logs) {
-              var log = logs[0],
-                  vehicleId = log.vehicleId,
-                  vehicleName = vehicles[vehicleId];
-              if (vehicleName || vehicleId === "0") {
-                log.driverName = driver.name;
-                log.vehicleName = vehicleName;
-                out.push(log);
-                logs = logs.slice(1);
-                if (logs[0]) {
-                  getNextLog(logs);
-                } else if (!drivers[0]) {
-                  cb(out);
-                }
-              } else {
-                sendReq({
-                  endpoint: "/fleet/vehicles/" + vehicleId,
-                  method: "GET",
-                  callback: function (rsp) {
-                    vehicles[vehicleId] = rsp.Name;
-                    getNextLog(logs);
-                  }
-                });
+            var next = function () {
+              logs = logs.slice(1);
+              if (logs[0]) {
+                getNextLog(logs);
+              } else if (!drivers[0]) {
+                cb(out);
               }
-            })(rsp.logs);
-            out = out.concat(rsp.logs);
+            };
+            if (logs[0]) {
+              (function getNextLog (logs) {
+                var log = logs[0],
+                    vehicleId = log.vehicleId,
+                    vehicleName = vehicles[vehicleId];
+                if (vehicleName || vehicleId === "0") {
+                  log.driverName = driver.name;
+                  log.vehicleName = vehicleName;
+                  out.push(log);
+                  next();
+                } else {
+                  sendReq({
+                    endpoint: "/fleet/vehicles/" + vehicleId,
+                    method: "GET",
+                    callback: function (rsp) {
+                      vehicles[vehicleId] = rsp.Name;
+                      getNextLog(logs);
+                    }
+                  });
+                }
+              })(rsp.logs);
+            } else {
+              next();
+            }
           }
         });
         if (drivers[0]) getNext(drivers);
