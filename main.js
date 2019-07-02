@@ -165,7 +165,8 @@ var getHOSLogs = function (config) {
       dates = config.dates.split("-"),
       start = parseDate(dates[0]).getTime(),
       end = parseDate(dates[1] || dates[0]).getTime() + day,
-      out = [];
+      out = [],
+      vehicles = {};
   sendReq({
     endpoint: "/fleet/drivers",
     method: "GET",
@@ -178,8 +179,29 @@ var getHOSLogs = function (config) {
           method: "GET",
           params: [["driverId", driver.id], ["startMs", start], ["endMs", end]],
           callback: function (rsp) {
+            (function getNextLog (logs) {
+              var log = logs[0],
+                  vehicleId = log.vehicleId,
+                  vehicleName = vehicles[vehicleId];
+              if (vehicleName) {
+                log.driverName = driver.name;
+                log.vehicleName = vehicleName;
+                out.push(log);
+                logs = logs.slice(1);
+                if (!logs[0] && !drivers[0]) cb(out);
+              } else {
+                sendReq({
+                  endpoint: "/fleet/vehicles/" + vehicleId,
+                  method: "GET",
+                  callback: function (rsp) {
+                    vehicles[vehicleId] = rsp.Name;
+                    getNextLog(logs);
+                  }
+                });
+              }
+              if (logs[0]) getNextLog(logs);
+            })(rsp.logs);
             out = out.concat(rsp.logs);
-            if (!drivers[0]) cb(out);
           }
         });
         if (drivers[0]) getNext(drivers);
