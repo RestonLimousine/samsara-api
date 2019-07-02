@@ -192,7 +192,6 @@ var getHOSLogs = function (config) {
                   log.driverName = driver.name;
                   log.vehicleName = vehicleName;
                   out.push(log);
-                  console.log(log);
                   logs = logs.slice(1);
                   if (logs[0]) {
                     getNextLog(logs);
