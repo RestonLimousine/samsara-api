@@ -190,11 +190,11 @@ var getHOSLogs = function (config) {
                   log.driverName = driver.name;
                   log.vehicleName = vehicleName;
                   out.push(log);
+                  console.log(log);
                   logs = logs.slice(1);
-                  logCount--;
                   if (logs[0]) {
                     getNextLog(logs);
-                  } else if (!drivers[0] && logCount === 0) {
+                  } else if (!drivers[0] && out.length === logCount) {
                     cb(out);
                   }
                 } else {
@@ -207,7 +207,7 @@ var getHOSLogs = function (config) {
                     }
                   });
                 }
-              } else if (!drivers[0] && logCount === 0) {
+              } else if (!drivers[0] && out.length === logCount) {
                 cb(out);
               }
             })(rsp.logs);
