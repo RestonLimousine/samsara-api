@@ -350,7 +350,7 @@ function createAndDownloadXLSX (config) {
   config.content = prepareForTable(config.content);
   downloadXLSX(config);
 }
-
+// todo: how to include mobile number and location in export file for Heymarket?
 function createDriver (inputs) {
   var id = "000" + inputs.id;
   id = id.slice(id.length - 4);
