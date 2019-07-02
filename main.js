@@ -176,7 +176,7 @@ var getHOSLogs = function (config) {
         sendReq({
           endpoint: "/fleet/hos_logs",
           method: "GET",
-          params: ["driverId", driver.id, "startMs", start, "endMs", end],
+          params: [["driverId", driver.id], ["startMs", start], ["endMs", end]],
           callback: function (rsp) {
             out = out.concat(rsp.logs);
             if (!drivers[0]) cb(out);
