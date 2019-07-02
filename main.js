@@ -188,7 +188,11 @@ var getHOSLogs = function (config) {
                 log.vehicleName = vehicleName;
                 out.push(log);
                 logs = logs.slice(1);
-                if (!logs[0] && !drivers[0]) cb(out);
+                if (logs[0]) {
+                  getNextLog(logs);
+                } else if (!drivers[0]) {
+                  cb(out);
+                }
               } else {
                 sendReq({
                   endpoint: "/fleet/vehicles/" + vehicleId,
@@ -199,7 +203,6 @@ var getHOSLogs = function (config) {
                   }
                 });
               }
-              if (logs[0]) getNextLog(logs);
             })(rsp.logs);
             out = out.concat(rsp.logs);
           }
