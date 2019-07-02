@@ -172,9 +172,11 @@ var getHOSLogs = function (config) {
     endpoint: "/fleet/drivers",
     method: "GET",
     callback: function (rsp) {
+      var driverCount = rsp.drivers.length;
       (function getNext (drivers) {
         var driver = drivers[0];
         drivers = drivers.slice(1);
+        driverCount--;
         sendReq({
           endpoint: "/fleet/hos_logs",
           method: "GET",
@@ -194,7 +196,7 @@ var getHOSLogs = function (config) {
                   logs = logs.slice(1);
                   if (logs[0]) {
                     getNextLog(logs);
-                  } else if (!drivers[0] && out.length === logCount) {
+                  } else if (driverCount === 0 && out.length === logCount) {
                     cb(out);
                   }
                 } else {
@@ -207,7 +209,7 @@ var getHOSLogs = function (config) {
                     }
                   });
                 }
-              } else if (!drivers[0] && out.length === logCount) {
+              } else if (driverCount === 0 && out.length === logCount) {
                 cb(out);
               }
             })(rsp.logs);
