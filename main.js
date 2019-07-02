@@ -160,6 +160,34 @@ function getIdlingReport (config) {
   });
 }
 
+var getHOSLogs = function (config) {
+  var cb = config.callback,
+      dates = config.dates.split("-"),
+      start = parseDate(dates[0]).getTime(),
+      end = parseDate(dates[1] || dates[0]).getTime() + day,
+      out = [];
+  sendReq({
+    endpoint: "/fleet/drivers",
+    method: "GET",
+    callback: function (rsp) {
+      (function getNext (drivers) {
+        var driver = drivers[0];
+        drivers = drivers.slice(1);
+        sendReq({
+          endpoint: "/fleet/hos_logs",
+          method: "GET",
+          params: ["driverId", driver.id, "startMs", start, "endMs", end],
+          callback: function (rsp) {
+            out = out.concat(rsp.logs);
+            if (!drivers[0]) cb(out);
+          }
+        });
+        if (drivers[0]) getNext(drivers);
+      })(rsp.drivers);
+    }
+  });
+}
+
 var getHOSAuthLogs = function (config) {
   var cb = config.callback,
       daysAgo = day * parseInt(config.days_ago),
@@ -414,6 +442,11 @@ var div = document.createElement("div"),
         label: "HOS Authentication Logs",
         op: getHOSAuthLogs,
         params: ["Days Ago", "days_ago"]
+      },
+      {
+        label: "HOS Logs",
+        op: getHOSLogs,
+        params: ["Date Or Range", "date_range"]
       },
       {
         label: "Vehicle Mileage",
