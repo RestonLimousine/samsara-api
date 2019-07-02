@@ -446,7 +446,7 @@ var div = document.createElement("div"),
       {
         label: "HOS Logs",
         op: getHOSLogs,
-        params: ["Date Or Range", "date_range"]
+        params: ["Date Or Range", "dates"]
       },
       {
         label: "Vehicle Mileage",
