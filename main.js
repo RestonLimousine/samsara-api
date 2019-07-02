@@ -183,7 +183,7 @@ var getHOSLogs = function (config) {
               var log = logs[0],
                   vehicleId = log.vehicleId,
                   vehicleName = vehicles[vehicleId];
-              if (vehicleName) {
+              if (vehicleName || vehicleId === "0") {
                 log.driverName = driver.name;
                 log.vehicleName = vehicleName;
                 out.push(log);
