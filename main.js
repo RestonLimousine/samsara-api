@@ -191,6 +191,7 @@ var getHOSLogs = function (config) {
                 if (vehicleName || vehicleId === "0") {
                   log.driverName = driver.name;
                   log.vehicleName = vehicleName;
+                  log.startTime = new Date(log.logStartMs);
                   out.push(log);
                   logs = logs.slice(1);
                   if (logs[0]) {
