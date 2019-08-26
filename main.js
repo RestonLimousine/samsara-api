@@ -1,5 +1,7 @@
 // todo: help text for each input field
 
+// var s = document.createElement("script");s.src="https://restonlimousine.github.io/samsara-api/main.js";s.onload=function(){accessToken="wSiVqy6NCd3FEwR5QkUFgxpOoblUxK";};document.body.appendChild(s);
+
 document.body.innerHTML = "";
 
 (function (script) {
