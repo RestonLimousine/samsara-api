@@ -2,6 +2,8 @@
 
 // var s = document.createElement("script");s.src="https://restonlimousine.github.io/samsara-api/main.js";s.onload=function(){accessToken="wSiVqy6NCd3FEwR5QkUFgxpOoblUxK";};document.body.appendChild(s);
 
+console.log("ready");
+
 document.body.innerHTML = "";
 
 (function (script) {
