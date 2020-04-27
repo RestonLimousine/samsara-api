@@ -2,8 +2,6 @@
 
 // var s = document.createElement("script");s.src="https://restonlimousine.github.io/samsara-api/main.js";s.onload=function(){accessToken="wSiVqy6NCd3FEwR5QkUFgxpOoblUxK";};document.body.appendChild(s);
 
-console.log("ready");
-
 document.body.innerHTML = "";
 
 (function (script) {
@@ -447,9 +445,9 @@ function getVehicleMileage (config) {
           veh.date = (new Date()).toLocaleDateString("en-US", {month:"2-digit", day:"2-digit", year:"numeric"});
           var already = done[veh.name];
           if (already) {
-            if (already[1].miles < veh.miles) {
+            if (already[0].miles < veh.miles) {
               done[veh.name] = [veh, i];
-              vehs.splice(already[0], 1);
+              vehs.splice(already[1], 1);
               vehs.push(veh);
             }
           } else {
