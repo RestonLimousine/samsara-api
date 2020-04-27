@@ -436,12 +436,27 @@ function getVehicleMileage (config) {
     endpoint: "/fleet/list",
     method: "GET",
     callback: function (rsp) {
-      config.callback(rsp.vehicles.map(function (veh) {
-        veh.miles = (veh.odometerMeters === null ? "" : Math.floor(veh.odometerMeters * 0.000621371));
-        delete veh.odometerMeters;
-        veh.date = (new Date()).toLocaleDateString("en-US", {month:"2-digit", day:"2-digit", year:"numeric"});
-        return veh;
-      }));
+      var vehs = [], done = {};
+      for (var i = 0; i < rsp.vehicles.length; i++) {
+        var veh = rsp.vehicles[i];
+        if (veh.odometerMeters) {
+          veh.miles = Math.floor(veh.odometerMeters * 0.000621371);
+          delete veh.odometerMeters;
+          veh.date = (new Date()).toLocaleDateString("en-US", {month:"2-digit", day:"2-digit", year:"numeric"});
+          var already = done[veh.name];
+          if (already) {
+            if (already[1].miles < veh.miles) {
+              done[veh.name] = [veh, i];
+              vehs.splice(already[0], 1);
+              vehs.push(veh);
+            }
+          } else {
+            done[veh.name] = [veh, i];
+            vehs.push(veh);
+          }
+        }
+      }
+      config.callback(vehs);
     }
   });
 }
