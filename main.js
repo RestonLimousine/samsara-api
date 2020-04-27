@@ -447,19 +447,24 @@ function getVehicleMileage (config) {
           if (already) {
             if (already[0].miles < veh.miles) {
               done[veh.name] = [veh, i];
-              vehs.splice(already[1], 1);
+              vehs[already[1]] = null;
               vehs.push(veh);
             }
           } else {
             done[veh.name] = [veh, i];
             vehs.push(veh);
           }
+        } else {
+          vehs[i] = null;
         }
       }
+      vehs = vehs.filter(function (v) { return v; }).sortByKey("name");
       config.callback(vehs);
     }
   });
 }
+
+console.log("ready");
 
 function prepareDriverRow (row) {
   var jt = row["JobType"] || "";
