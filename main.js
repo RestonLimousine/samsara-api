@@ -464,8 +464,6 @@ function getVehicleMileage (config) {
   });
 }
 
-console.log("ready");
-
 function prepareDriverRow (row) {
   var jt = row["JobType"] || "";
   if (jt.match(/^(006|007|008|010)/)
